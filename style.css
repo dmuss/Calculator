@@ -1,21 +1,39 @@
 :root {
+  --body-bg: #eaeaea;
   --calc-bg: #333333;
+  --display-bg: lightgrey;
+  --display-font-color: black;
   --op-btn-hover: hsl(39, 100%, 40%);
   --op-btn-bg: hsl(39, 100%, 50%);
   --op-btn-active: hsl(39, 100%, 60%);
+  --op-btn-font-color: white;
   --clear-btn-hover: hsl(0, 0%, 40%);
   --clear-btn-bg: hsl(0, 0%, 50%);
   --clear-btn-active: hsl(0, 0%, 60%);
+  --clear-btn-font-color: black;
+  --num-btn-hover: #aeaeae;
+  --num-btn-bg: #e9e9ed;
+  --num-btn-active: #f4f4f4;
+  --num-btn-font-color: black;
 }
 
 [data-theme="dark"] {
-  --calc-bg: #3aa3ab;
-  --op-btn-bg: orange;
-  --op-btn-hover: darkgoldenrod;
-  --op-btn-active: darkorange;
+  --body-bg: #333333;
+  --calc-bg: #eaeaea;
+  --display-bg: #555555;
+  --display-font-color: lightgrey;
+  --op-btn-hover: hsl(39, 100%, 20%);
+  --op-btn-bg: hsl(39, 100%, 30%);
+  --op-btn-active: hsl(39, 100%, 40%);
+  --op-btn-font-color: lightgrey;
   --clear-btn-bg: grey;
   --clear-btn-hover: #b0b0b0;
   --clear-btn-active: lightgrey;
+  --clear-btn-font-color: lightgrey;
+  --num-btn-hover: #222222;
+  --num-btn-bg: #333333;
+  --num-btn-active: #444444;
+  --num-btn-font-color: lightgrey;
 }
 
 *,
@@ -29,6 +47,7 @@
 }
 
 body {
+  background-color: var(--body-bg);
   font-family: monospace;
   font-size: 2rem;
   font-weight: 900;
@@ -94,7 +113,8 @@ button {
 }
 
 #display {
-  background-color: lightgrey;
+  background-color: var(--display-bg);
+  color: var(--display-font-color);
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
@@ -115,8 +135,21 @@ button {
   align-self: flex-end;
 }
 
+button {
+  color: var(--num-btn-font-color);
+  background-color: var(--num-btn-bg);
+}
+
+button:hover {
+  background-color: var(--num-btn-hover);
+}
+
+button:active {
+  background-color: var(--num-btn-active);
+}
+
 .op-btn {
-  color: white;
+  color: var(--op-btn-font-color);
   background-color: var(--op-btn-bg);
 }
 
@@ -132,16 +165,17 @@ button {
   background-color: var(--op-btn-hover);
 }
 
+.clear-btn {
+  color: var(--clear-btn-font-color);
+  background-color: var(--clear-btn-bg);
+}
+
 .clear-btn:hover {
   background-color: var(--clear-btn-hover);
 }
 
 .clear-btn:active {
   background-color: var(--clear-btn-active);
-}
-
-.clear-btn {
-  background-color: var(--clear-btn-bg);
 }
 
 .theme-switch-wrapper {
