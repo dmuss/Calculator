@@ -5,6 +5,7 @@ let secondOperand = null;
 let operator = null;
 
 const updateDisplay = () => {
+  // Remove leading zero, if necessary.
   if (currentOperandStr.length > 1 && currentOperandStr.startsWith("0")) {
     currentOperandStr = currentOperandStr.substring(1);
   }
@@ -34,8 +35,16 @@ const updateCurrentOperand = (clickedTarget) => {
         }
       }
       break;
-    default:
-      currentOperandStr += clickedTarget.value;
+    default: // All buttons without specific `id`s update the current operand.
+      if (
+        clickedTarget.textContent === "." &&
+        currentOperandStr.includes(".")
+      ) {
+        console.log("can not have more than one decimal place");
+        return;
+      } else {
+        currentOperandStr += clickedTarget.textContent;
+      }
       break;
   }
 };
@@ -50,7 +59,6 @@ const onOperatorClick = (clickedTarget) => {
     currentOperandStr = "0";
 
     setAndHighlightOperator(`#${clickedTarget.id}`);
-
     memoStr = `${firstOperand} ${operator}`;
   } else if (secondOperand === null && currentOperandStr !== "0") {
     secondOperand = Number.parseFloat(currentOperandStr);
