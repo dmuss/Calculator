@@ -9,6 +9,8 @@
 }
 
 body {
+  font-family: monospace;
+  text-align: center;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -42,4 +44,42 @@ h6 {
 #root,
 #__next {
   isolation: isolate;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 95vh;
+  height: 100vh;
+}
+
+div,
+button {
+  border: none;
+  border-radius: 10px;
+}
+
+#calculator {
+  background-color: darkblue;
+  border: 10px solid darkblue;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(100px, 1fr));
+  grid-template-rows: repeat(6, minmax(100px, 1fr));
+  overflow: hidden;
+  gap: 3px;
+  flex: 0 0 auto;
+}
+
+#display {
+  background-color: lightgrey;
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 5%;
+}
+
+#equals-btn {
+  grid-column: 3 / 5;
 }
