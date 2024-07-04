@@ -98,11 +98,11 @@ const updateCurrentOperatorByBtnID = (id) => {
 
 const updateAndHighlightCurrentOpBtnByID = (id) => {
   if (currOpBtn !== null) {
-    currOpBtn.style.backgroundColor = "white";
+    currOpBtn.style.backgroundColor = "";
   }
 
   const btnToHighlight = document.querySelector(`#${id}`);
-  btnToHighlight.style.backgroundColor = "yellow";
+  btnToHighlight.style.backgroundColor = "darkorange";
 
   currOpBtn = btnToHighlight;
 };
@@ -119,7 +119,7 @@ const reset = (newDisplayStr = "0") => {
   opStr = null;
 
   if (currOpBtn !== null) {
-    currOpBtn.style.backgroundColor = "white";
+    currOpBtn.style.backgroundColor = "";
     currOpBtn = null;
   }
 };
@@ -180,7 +180,24 @@ document.addEventListener("DOMContentLoaded", () => {
 const calculator = document.querySelector("#calculator");
 calculator.addEventListener("click", (event) => {
   const target = event.target;
+  const targetClasses = target.className;
 
+  if (targetClasses.includes("operand")) {
+    updateOperandByTargetID(target);
+  }
+
+  if (targetClasses.includes("operator")) {
+    operatorClicked(target);
+  }
+
+  if (targetClasses.includes("all-clear")) {
+    reset();
+  }
+
+  if (targetClasses.includes("equals")) {
+    equalsPressed();
+  }
+  /*
   switch (target.className) {
     case "operand":
       updateOperandByTargetID(target);
@@ -197,6 +214,7 @@ calculator.addEventListener("click", (event) => {
     default:
       break;
   }
+  */
 
   updateDisplay();
 });

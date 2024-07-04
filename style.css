@@ -94,3 +94,28 @@ button {
   font-size: 2.5rem;
   align-self: flex-end;
 }
+
+.op-btn {
+  background-color: orange;
+  color: white;
+}
+
+.op-btn:hover {
+  background-color: darkgoldenrod;
+}
+
+.op-btn:active {
+  background-color: darkorange;
+}
+
+.clear-btn {
+  background-color: grey;
+}
+
+.clear-btn:hover {
+  background-color: #b0b0b0;
+}
+
+.clear-btn:active {
+  background-color: lightgrey;
+}
