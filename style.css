@@ -63,13 +63,13 @@ button {
 }
 
 #calculator {
-  background-color: darkblue;
-  border: 10px solid darkblue;
+  background-color: #333333;
+  border: 20px solid #333333;
   display: grid;
   grid-template-columns: repeat(4, minmax(100px, 1fr));
   grid-template-rows: repeat(6, minmax(100px, 1fr));
   overflow: hidden;
-  gap: 3px;
+  gap: 8px;
   flex: 0 0 auto;
 }
 
@@ -79,7 +79,6 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   padding-right: 5%;
 }
 
@@ -87,6 +86,8 @@ button {
   font-size: 1rem;
   font-weight: normal;
   align-self: flex-start;
+  padding-left: 5%;
+  padding-top: 2.5%;
 }
 
 #current-operand {
