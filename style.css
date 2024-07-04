@@ -10,6 +10,8 @@
 
 body {
   font-family: monospace;
+  font-size: 2rem;
+  font-weight: 900;
   text-align: center;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -78,6 +80,10 @@ button {
   justify-content: space-between;
   align-items: center;
   padding-right: 5%;
+}
+
+#current-operand {
+  font-size: 2.5rem;
 }
 
 .equals {

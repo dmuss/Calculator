@@ -1,5 +1,5 @@
 let currentOperandStr = "0";
-let memoStr = null;
+let memoStr = "";
 let firstOperand = null;
 let secondOperand = null;
 let operator = null;
@@ -39,32 +39,60 @@ const updateCurrentOperand = (clickedTarget) => {
 };
 
 const onOperatorClick = (clickedTarget) => {
-  parsedOperand = Number.parseFloat(currentOperandStr);
-
-  if (isNaN(parsedOperand)) {
-    console.log("cannot operate on non-number");
+  if (firstOperand === null && currentOperandStr === "0") {
     return;
   }
 
   if (firstOperand === null) {
-    firstOperand = parsedOperand;
-    secondOperand = null;
+    // TODO: Validation.
+    firstOperand = Number.parseFloat(currentOperandStr);
     currentOperandStr = "0";
-  }
 
-  operator = clickedTarget.value;
-  memoStr = `${firstOperand} ${operator}`;
+    setAndHighlightOperator(`#${clickedTarget.id}`);
+
+    memoStr = `${firstOperand} ${operator}`;
+  } else if (secondOperand === null && currentOperandStr !== "0") {
+    // TODO: Validation.
+    secondOperand = Number.parseFloat(currentOperandStr);
+
+    firstOperand = operate(firstOperand, secondOperand, operator);
+    currentOperandStr = "0";
+    secondOperand = null;
+
+    setAndHighlightOperator(`#${clickedTarget.id}`);
+    memoStr = `${firstOperand} ${operator}`;
+  } else {
+    setAndHighlightOperator(`#${clickedTarget.id}`);
+    memoStr = `${firstOperand} ${operator}`;
+  }
+};
+
+const setAndHighlightOperator = (selector) => {
+  resetOperatorBtns();
+
+  const btnToHighlight = document.querySelector(selector);
+  btnToHighlight.style.backgroundColor = "yellow";
+
+  operator = btnToHighlight.textContent;
+};
+
+const resetOperatorBtns = () => {
+  const operatorBtns = document.querySelectorAll(".operator");
+  operatorBtns.forEach((btn) => {
+    btn.style.backgroundColor = "white";
+  });
 };
 
 const clear = () => {
   currentOperandStr = "0";
-  memoStr = null;
+  memoStr = "";
   firstOperand = null;
   secondOperand = null;
   operator = null;
+  resetOperatorBtns();
 };
 
-const equals = () => {
+const onEqualsPressed = () => {
   if (!Number.isNaN(firstOperand) && !Number.isNaN(secondOperand)) {
     if (secondOperand === null) {
       parsedOperand = Number.parseFloat(currentOperandStr);
@@ -77,15 +105,15 @@ const equals = () => {
       secondOperand = parsedOperand;
       memoStr = `${firstOperand} ${operator} ${secondOperand} =`;
 
-      currentOperandStr = operate(
-        firstOperand,
-        secondOperand,
-        operator,
-      ).toString();
+      result = operate(firstOperand, secondOperand, operator);
+
+      currentOperandStr = result.toString();
 
       firstOperand = null;
       secondOperand = null;
       operator = null;
+      memoStr = "";
+      resetOperatorBtns();
     }
   } else {
     console.log("one of the operands is not a number");
@@ -151,7 +179,7 @@ calculator.addEventListener("click", (event) => {
       clear();
       break;
     case "equals":
-      equals();
+      onEqualsPressed();
       break;
     default:
       break;
