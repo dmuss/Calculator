@@ -46,7 +46,6 @@ const onOperatorClick = (clickedTarget) => {
   }
 
   if (firstOperand === null) {
-    // TODO: Validation.
     firstOperand = Number.parseFloat(currentOperandStr);
     currentOperandStr = "0";
 
@@ -54,7 +53,6 @@ const onOperatorClick = (clickedTarget) => {
 
     memoStr = `${firstOperand} ${operator}`;
   } else if (secondOperand === null && currentOperandStr !== "0") {
-    // TODO: Validation.
     secondOperand = Number.parseFloat(currentOperandStr);
 
     firstOperand = operate(firstOperand, secondOperand, operator);
@@ -70,6 +68,7 @@ const onOperatorClick = (clickedTarget) => {
 };
 
 const setAndHighlightOperator = (selector) => {
+  // TODO: Just reset the individual buttons to no styling?
   resetOperatorBtns();
 
   const btnToHighlight = document.querySelector(selector);
@@ -85,8 +84,8 @@ const resetOperatorBtns = () => {
   });
 };
 
-const clear = () => {
-  currentOperandStr = "0";
+const clear = (newOperandStr = "0") => {
+  currentOperandStr = newOperandStr;
   memoStr = "";
   firstOperand = null;
   secondOperand = null;
@@ -95,30 +94,16 @@ const clear = () => {
 };
 
 const onEqualsPressed = () => {
-  if (!Number.isNaN(firstOperand) && !Number.isNaN(secondOperand)) {
-    if (secondOperand === null) {
-      parsedOperand = Number.parseFloat(currentOperandStr);
-
-      if (isNaN(parsedOperand)) {
-        console.log("cannot operate on non-number");
-        return;
-      }
-
-      secondOperand = parsedOperand;
-      memoStr = `${firstOperand} ${operator} ${secondOperand} =`;
-
-      result = operate(firstOperand, secondOperand, operator);
-
-      currentOperandStr = result.toString();
-
-      firstOperand = null;
-      secondOperand = null;
-      operator = null;
-      memoStr = "";
-      resetOperatorBtns();
-    }
+  if (firstOperand === null) {
+    console.log("cannot equate sensible operation without first operand");
+    return;
   } else {
-    console.log("one of the operands is not a number");
+    // TODO: Validation.
+    secondOperand = Number.parseFloat(currentOperandStr);
+    result = operate(firstOperand, secondOperand, operator);
+
+    currentOperandStr = result.toString();
+    clear(currentOperandStr);
   }
 };
 
@@ -163,6 +148,9 @@ const isNumber = (num) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log(
+    `${firstOperand} ${secondOperand} ${operator} ${currentOperandStr} ${memoStr}`,
+  );
   updateDisplay();
 });
 
