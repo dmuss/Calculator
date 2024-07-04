@@ -1,28 +1,79 @@
 let displayValueStr = "0";
+let firstOperand = 0;
+let secondOperand = 0;
+let operator = "";
 
 const updateDisplay = () => {
   let displayElem = document.querySelector("#display");
+
+  if (displayValueStr.length > 1 && displayValueStr.startsWith("0")) {
+    displayValueStr = displayValueStr.substring(1);
+  }
+
   displayElem.textContent = displayValueStr;
+};
+
+const updateCurrentOperand = (clickedTarget) => {
+  switch (clickedTarget.id) {
+    case "del":
+      if (displayValueStr.length === 1) {
+        displayValueStr = "0";
+      } else {
+        displayValueStr = displayValueStr.substring(
+          0,
+          displayValueStr.length - 1,
+        );
+      }
+      break;
+    case "negate":
+      if (displayValueStr.startsWith("-")) {
+        displayValueStr = displayValueStr.substring(1);
+      } else {
+        displayValueStr = "-" + displayValueStr;
+      }
+      break;
+    default:
+      displayValueStr += clickedTarget.value;
+      break;
+  }
+};
+
+const clear = () => {
+  displayValueStr = "0";
+  firstOperand = 0;
+  secondOperand = 0;
+  operator = "";
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   updateDisplay();
 });
 
-// TODO: listener on div#calculator that dispatches?
-const buttons = document.querySelectorAll("button");
-buttons.forEach((button) => {
-  button.addEventListener("click", (event) => {
-    displayValueStr += `${event.target.value}`;
+const calculator = document.querySelector("#calculator");
+calculator.addEventListener("click", (event) => {
+  const clickedTarget = event.target;
 
-    if (displayValueStr.length > 1 && displayValueStr.startsWith("0")) {
-      displayValueStr = displayValueStr.substring(1);
-    }
-
-    updateDisplay();
-  });
+  switch (clickedTarget.className) {
+    case "operand":
+      updateCurrentOperand(clickedTarget);
+      updateDisplay();
+      break;
+    case "operator":
+      console.log("operator clicked!");
+      break;
+    case "clear":
+      clear();
+      updateDisplay();
+      break;
+    case "equals":
+      console.log("equals clicked!");
+      break;
+    default:
+      break;
+  }
 });
 
+/*
 let NUM1 = 0;
 let NUM2 = 0;
 let OP = "";
@@ -73,3 +124,4 @@ const operate = (num1, num2, op) => {
 const isNumber = (num) => {
   return typeof num === "number" && !isNaN(num);
 };
+*/

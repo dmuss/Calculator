@@ -80,6 +80,6 @@ button {
   padding-right: 5%;
 }
 
-#equals-btn {
+.equals {
   grid-column: 3 / 5;
 }
