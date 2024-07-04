@@ -1,17 +1,15 @@
 :root {
   --calc-bg: #333333;
-  --calc-border: var(--calc-bg);
-  --op-btn-bg: orange;
-  --op-btn-hover: darkgoldenrod;
-  --op-btn-active: darkorange;
-  --clear-btn-bg: grey;
-  --clear-btn-hover: #b0b0b0;
-  --clear-btn-active: lightgrey;
+  --op-btn-hover: hsl(39, 100%, 40%);
+  --op-btn-bg: hsl(39, 100%, 50%);
+  --op-btn-active: hsl(39, 100%, 60%);
+  --clear-btn-hover: hsl(0, 0%, 40%);
+  --clear-btn-bg: hsl(0, 0%, 50%);
+  --clear-btn-active: hsl(0, 0%, 60%);
 }
 
 [data-theme="dark"] {
   --calc-bg: #3aa3ab;
-  --calc-border: var(--calc-bg);
   --op-btn-bg: orange;
   --op-btn-hover: darkgoldenrod;
   --op-btn-active: darkorange;
@@ -86,7 +84,7 @@ button {
 
 #calculator {
   background-color: var(--calc-bg);
-  border: 20px solid var(--calc-border);
+  border: 20px solid var(--calc-bg);
   display: grid;
   grid-template-columns: repeat(4, minmax(100px, 1fr));
   grid-template-rows: repeat(6, minmax(100px, 1fr));
@@ -118,28 +116,32 @@ button {
 }
 
 .op-btn {
-  background-color: orange;
   color: white;
+  background-color: var(--op-btn-bg);
 }
 
 .op-btn:hover {
-  background-color: darkgoldenrod;
+  background-color: var(--op-btn-hover);
 }
 
 .op-btn:active {
-  background-color: darkorange;
+  background-color: var(--op-btn-active);
 }
 
-.clear-btn {
-  background-color: grey;
+.op-btn:disabled {
+  background-color: var(--op-btn-hover);
 }
 
 .clear-btn:hover {
-  background-color: #b0b0b0;
+  background-color: var(--clear-btn-hover);
 }
 
 .clear-btn:active {
-  background-color: lightgrey;
+  background-color: var(--clear-btn-active);
+}
+
+.clear-btn {
+  background-color: var(--clear-btn-bg);
 }
 
 .theme-switch-wrapper {

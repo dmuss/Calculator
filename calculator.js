@@ -57,6 +57,7 @@ const negateCurrentOperand = () => {
  * the value of the clicked button to the display.
  */
 const updateDisplayStrWithTargetContent = (target) => {
+  // TODO: Use `disabled` attribute to control number of decimal points?
   if (!(target.textContent === "." && displayStr.includes("."))) {
     displayStr += target.textContent;
   }
@@ -98,13 +99,10 @@ const updateCurrentOperatorByBtnID = (id) => {
 
 const updateAndHighlightCurrentOpBtnByID = (id) => {
   if (currOpBtn !== null) {
-    currOpBtn.style.backgroundColor = "";
+    currOpBtn.removeAttribute("disabled");
   }
-
-  const btnToHighlight = document.querySelector(`#${id}`);
-  btnToHighlight.style.backgroundColor = "darkorange";
-
-  currOpBtn = btnToHighlight;
+  currOpBtn = document.querySelector(`#${id}`);
+  currOpBtn.setAttribute("disabled", true);
 };
 
 /***
@@ -119,7 +117,7 @@ const reset = (newDisplayStr = "0") => {
   opStr = null;
 
   if (currOpBtn !== null) {
-    currOpBtn.style.backgroundColor = "";
+    currOpBtn.removeAttribute("disabled");
     currOpBtn = null;
   }
 };
@@ -132,6 +130,8 @@ const equalsPressed = () => {
     secondOperand = Number.parseFloat(displayStr);
 
     result = operate(firstOperand, secondOperand, opStr);
+
+    // TODO: Need error-handling for divide-by-zero issues here.
 
     reset(result.toString());
   }
