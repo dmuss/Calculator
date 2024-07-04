@@ -38,9 +38,6 @@ const updateCurrentOperand = (clickedTarget) => {
   }
 };
 
-// TODO: Pressing an operator twice after the first operand
-// is entered will pull the '0' from the display and replace
-// the first operand.
 const onOperatorClick = (clickedTarget) => {
   parsedOperand = Number.parseFloat(currentOperandStr);
 
@@ -49,19 +46,14 @@ const onOperatorClick = (clickedTarget) => {
     return;
   }
 
-  firstOperand = parsedOperand;
-  secondOperand = null;
-  currentOperandStr = "0";
+  if (firstOperand === null) {
+    firstOperand = parsedOperand;
+    secondOperand = null;
+    currentOperandStr = "0";
+  }
 
-  setOperator(clickedTarget.value);
-
+  operator = clickedTarget.value;
   memoStr = `${firstOperand} ${operator}`;
-
-  console.log(`calculating: ${firstOperand} ${operator}`);
-};
-
-const setOperator = (op) => {
-  operator = op;
 };
 
 const clear = () => {
@@ -90,6 +82,10 @@ const equals = () => {
         secondOperand,
         operator,
       ).toString();
+
+      firstOperand = null;
+      secondOperand = null;
+      operator = null;
     }
   } else {
     console.log("one of the operands is not a number");
