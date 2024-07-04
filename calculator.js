@@ -1,117 +1,134 @@
-let currentOperandStr = "0";
+let displayStr = "0";
 let memoStr = "";
 let firstOperand = null;
 let secondOperand = null;
-let operator = null;
+let opStr = null;
+let currOpBtn = null;
 
 const updateDisplay = () => {
-  // Remove leading zero, if necessary.
-  if (currentOperandStr.length > 1 && currentOperandStr.startsWith("0")) {
-    currentOperandStr = currentOperandStr.substring(1);
+  if (displayStr.length > 1 && displayStr.startsWith("0")) {
+    displayStr = displayStr.substring(1);
   }
 
-  document.querySelector("#current-operand").textContent = currentOperandStr;
+  document.querySelector("#current-operand").textContent = displayStr;
   document.querySelector("#memo").textContent = memoStr;
 };
 
-const updateCurrentOperand = (clickedTarget) => {
-  switch (clickedTarget.id) {
+const updateOperandByTargetID = (target) => {
+  switch (target.id) {
     case "del":
-      if (currentOperandStr.length === 1) {
-        currentOperandStr = "0";
-      } else {
-        currentOperandStr = currentOperandStr.substring(
-          0,
-          currentOperandStr.length - 1,
-        );
-      }
+      deleteLeastSignificantDigit();
       break;
     case "negate":
-      if (currentOperandStr.startsWith("-")) {
-        currentOperandStr = currentOperandStr.substring(1);
-      } else {
-        if (currentOperandStr !== "0") {
-          currentOperandStr = "-" + currentOperandStr;
-        }
-      }
+      negateCurrentOperand();
       break;
-    default: // All buttons without specific `id`s update the current operand.
-      if (
-        clickedTarget.textContent === "." &&
-        currentOperandStr.includes(".")
-      ) {
-        console.log("can not have more than one decimal place");
-        return;
-      } else {
-        currentOperandStr += clickedTarget.textContent;
-      }
+    // All buttons without specific `id`s update the currently displayed
+    // operand.
+    default:
+      updateDisplayStrWithTargetContent(target);
       break;
   }
 };
 
-const onOperatorClick = (clickedTarget) => {
-  if (firstOperand === null && currentOperandStr === "0") {
+const deleteLeastSignificantDigit = () => {
+  if (displayStr.length <= 1) {
+    displayStr = "0";
+  } else {
+    displayStr = displayStr.substring(0, displayStr.length - 1);
+  }
+};
+
+const negateCurrentOperand = () => {
+  if (displayStr.startsWith("-")) {
+    displayStr = displayStr.substring(1);
+  } else {
+    if (displayStr !== "0") {
+      displayStr = "-" + displayStr;
+    }
+  }
+};
+
+/***
+ * If the target was the decimal button and the displayed string
+ * already contains a decimal, ignore that click. Otherwise, add
+ * the value of the clicked button to the display.
+ */
+const updateDisplayStrWithTargetContent = (target) => {
+  if (!(target.textContent === "." && displayStr.includes("."))) {
+    displayStr += target.textContent;
+  }
+};
+
+const operatorClicked = (clickedTarget) => {
+  // Operator buttons should do nothing if the user has not entered any
+  // numbers.
+  if (firstOperand === null && displayStr === "0") {
     return;
   }
+  // If the first operand has not been entered by the user.
+  else if (firstOperand === null) {
+    // Parse the currently displayed number and reset the display.
+    firstOperand = Number.parseFloat(displayStr);
+    displayStr = "0";
 
-  if (firstOperand === null) {
-    firstOperand = Number.parseFloat(currentOperandStr);
-    currentOperandStr = "0";
+    updateCurrentOperatorByBtnID(clickedTarget.id);
+    memoStr = `${firstOperand} ${opStr}`;
+  } else if (secondOperand === null && displayStr !== "0") {
+    secondOperand = Number.parseFloat(displayStr);
 
-    setAndHighlightOperator(`#${clickedTarget.id}`);
-    memoStr = `${firstOperand} ${operator}`;
-  } else if (secondOperand === null && currentOperandStr !== "0") {
-    secondOperand = Number.parseFloat(currentOperandStr);
-
-    firstOperand = operate(firstOperand, secondOperand, operator);
-    currentOperandStr = "0";
+    firstOperand = operate(firstOperand, secondOperand, opStr);
+    displayStr = "0";
     secondOperand = null;
 
-    setAndHighlightOperator(`#${clickedTarget.id}`);
-    memoStr = `${firstOperand} ${operator}`;
+    updateCurrentOperatorByBtnID(clickedTarget.id);
+    memoStr = `${firstOperand} ${opStr}`;
   } else {
-    setAndHighlightOperator(`#${clickedTarget.id}`);
-    memoStr = `${firstOperand} ${operator}`;
+    updateCurrentOperatorByBtnID(clickedTarget.id);
+    memoStr = `${firstOperand} ${opStr}`;
   }
 };
 
-const setAndHighlightOperator = (selector) => {
-  // TODO: Just reset the individual buttons to no styling?
-  resetOperatorBtns();
+const updateCurrentOperatorByBtnID = (id) => {
+  updateAndHighlightCurrentOpBtnByID(id);
+  opStr = currOpBtn.textContent;
+};
 
-  const btnToHighlight = document.querySelector(selector);
+const updateAndHighlightCurrentOpBtnByID = (id) => {
+  if (currOpBtn !== null) {
+    currOpBtn.style.backgroundColor = "white";
+  }
+
+  const btnToHighlight = document.querySelector(`#${id}`);
   btnToHighlight.style.backgroundColor = "yellow";
 
-  operator = btnToHighlight.textContent;
+  currOpBtn = btnToHighlight;
 };
 
-const resetOperatorBtns = () => {
-  const operatorBtns = document.querySelectorAll(".operator");
-  operatorBtns.forEach((btn) => {
-    btn.style.backgroundColor = "white";
-  });
-};
-
-const clear = (newOperandStr = "0") => {
-  currentOperandStr = newOperandStr;
+/***
+ * Resets the calculator.
+ * @param {newOperandStr} - The new value to be displayed to the user.
+ */
+const reset = (newDisplayStr = "0") => {
+  displayStr = newDisplayStr;
   memoStr = "";
   firstOperand = null;
   secondOperand = null;
-  operator = null;
-  resetOperatorBtns();
+  opStr = null;
+
+  currOpBtn.style.backgroundColor = "white";
+  currOpBtn = null;
 };
 
-const onEqualsPressed = () => {
+const equalsPressed = () => {
+  // Cannot evaluate an operation without first operand or operator.
   if (firstOperand === null) {
-    console.log("cannot equate sensible operation without first operand");
     return;
   } else {
-    // TODO: Validation.
-    secondOperand = Number.parseFloat(currentOperandStr);
-    result = operate(firstOperand, secondOperand, operator);
+    secondOperand = Number.parseFloat(displayStr);
 
-    currentOperandStr = result.toString();
-    clear(currentOperandStr);
+    result = operate(firstOperand, secondOperand, opStr);
+
+    reset(result.toString());
   }
 };
 
@@ -129,7 +146,6 @@ const multiply = (num1, num2) => {
 
 const divide = (num1, num2) => {
   if (num2 === 0) {
-    console.log("Cannot divide by 0.");
     return;
   }
 
@@ -146,38 +162,32 @@ const operate = (num1, num2, op) => {
       return multiply(num1, num2);
     case "/":
       return divide(num1, num2);
-    default:
-      console.log("Incorrect operator");
   }
 };
 
-const isNumber = (num) => {
-  return typeof num === "number" && !isNaN(num);
-};
-
+/*******************
+ * EVENT LISTENERS *
+ *******************/
 document.addEventListener("DOMContentLoaded", () => {
-  console.log(
-    `${firstOperand} ${secondOperand} ${operator} ${currentOperandStr} ${memoStr}`,
-  );
   updateDisplay();
 });
 
 const calculator = document.querySelector("#calculator");
 calculator.addEventListener("click", (event) => {
-  const clickedTarget = event.target;
+  const target = event.target;
 
-  switch (clickedTarget.className) {
+  switch (target.className) {
     case "operand":
-      updateCurrentOperand(clickedTarget);
+      updateOperandByTargetID(target);
       break;
     case "operator":
-      onOperatorClick(clickedTarget);
+      operatorClicked(target);
       break;
     case "clear":
-      clear();
+      reset();
       break;
     case "equals":
-      onEqualsPressed();
+      equalsPressed();
       break;
     default:
       break;
