@@ -1,3 +1,28 @@
+let displayValueStr = "0";
+
+const updateDisplay = () => {
+  let displayElem = document.querySelector("#display");
+  displayElem.textContent = displayValueStr;
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateDisplay();
+});
+
+// TODO: listener on div#calculator that dispatches?
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    displayValueStr += `${event.target.value}`;
+
+    if (displayValueStr.length > 1 && displayValueStr.startsWith("0")) {
+      displayValueStr = displayValueStr.substring(1);
+    }
+
+    updateDisplay();
+  });
+});
+
 let NUM1 = 0;
 let NUM2 = 0;
 let OP = "";
@@ -33,16 +58,12 @@ const operate = (num1, num2, op) => {
 
   switch (op) {
     case "+":
-      console.log(`add: ${num1} + ${num2} = ` + add(num1, num2));
       return add(num1, num2);
     case "-":
-      console.log(`sub: ${num1} - ${num2} = ` + subtract(num1, num2));
       return subtract(num1, num2);
     case "*":
-      console.log(`mul: ${num1} * ${num2} = ` + multiply(num1, num2));
       return multiply(num1, num2);
     case "/":
-      console.log(`div: ${num1} / ${num2} = ` + divide(num1, num2));
       return divide(num1, num2);
     default:
       console.log("Incorrect operator");
@@ -52,20 +73,3 @@ const operate = (num1, num2, op) => {
 const isNumber = (num) => {
   return typeof num === "number" && !isNaN(num);
 };
-
-NUM1 = 2;
-NUM2 = 2;
-
-OP = "+";
-operate(NUM1, NUM2, OP);
-OP = "-";
-operate(NUM1, NUM2, OP);
-OP = "*";
-operate(NUM1, NUM2, OP);
-OP = "/";
-operate(NUM1, NUM2, OP);
-operate(NUM1, 0, OP);
-OP = "ERROR";
-operate(NUM1, NUM2, OP);
-
-operate(OP, OP, OP);
