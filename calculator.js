@@ -29,7 +29,9 @@ const updateCurrentOperand = (clickedTarget) => {
       if (currentOperandStr.startsWith("-")) {
         currentOperandStr = currentOperandStr.substring(1);
       } else {
-        currentOperandStr = "-" + currentOperandStr;
+        if (currentOperandStr !== "0") {
+          currentOperandStr = "-" + currentOperandStr;
+        }
       }
       break;
     default:
