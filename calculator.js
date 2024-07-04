@@ -173,8 +173,22 @@ const operate = (num1, num2, op) => {
 /*******************
  * EVENT LISTENERS *
  *******************/
+
 document.addEventListener("DOMContentLoaded", () => {
   updateDisplay();
+
+  const currentTheme = localStorage.getItem("theme");
+
+  if (currentTheme) {
+    document.documentElement.setAttribute("data-theme", currentTheme);
+
+    if (currentTheme === "dark") {
+      const themeToggleSwitch = document.querySelector(
+        '.theme-switch input[type="checkbox"]',
+      );
+      themeToggleSwitch.checked = true;
+    }
+  }
 });
 
 const calculator = document.querySelector("#calculator");
@@ -197,24 +211,19 @@ calculator.addEventListener("click", (event) => {
   if (targetClasses.includes("equals")) {
     equalsPressed();
   }
-  /*
-  switch (target.className) {
-    case "operand":
-      updateOperandByTargetID(target);
-      break;
-    case "operator":
-      operatorClicked(target);
-      break;
-    case "all-clear":
-      reset();
-      break;
-    case "equals":
-      equalsPressed();
-      break;
-    default:
-      break;
-  }
-  */
 
   updateDisplay();
+});
+
+const themeToggleSwitch = document.querySelector(
+  '.theme-switch input[type="checkbox"]',
+);
+themeToggleSwitch.addEventListener("change", (event) => {
+  if (event.target.checked) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.setAttribute("data-theme", "light");
+    localStorage.setItem("theme", "light");
+  }
 });

@@ -1,3 +1,25 @@
+:root {
+  --calc-bg: #333333;
+  --calc-border: var(--calc-bg);
+  --op-btn-bg: orange;
+  --op-btn-hover: darkgoldenrod;
+  --op-btn-active: darkorange;
+  --clear-btn-bg: grey;
+  --clear-btn-hover: #b0b0b0;
+  --clear-btn-active: lightgrey;
+}
+
+[data-theme="dark"] {
+  --calc-bg: #3aa3ab;
+  --calc-border: var(--calc-bg);
+  --op-btn-bg: orange;
+  --op-btn-hover: darkgoldenrod;
+  --op-btn-active: darkorange;
+  --clear-btn-bg: grey;
+  --clear-btn-hover: #b0b0b0;
+  --clear-btn-active: lightgrey;
+}
+
 *,
 *::before,
 *::after {
@@ -63,8 +85,8 @@ button {
 }
 
 #calculator {
-  background-color: #333333;
-  border: 20px solid #333333;
+  background-color: var(--calc-bg);
+  border: 20px solid var(--calc-border);
   display: grid;
   grid-template-columns: repeat(4, minmax(100px, 1fr));
   grid-template-rows: repeat(6, minmax(100px, 1fr));
