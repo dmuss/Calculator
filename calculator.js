@@ -1,83 +1,100 @@
-let displayValueStr = "0";
-let firstOperand = 0;
-let secondOperand = 0;
-let operator = "";
+let currentOperandStr = "0";
+let memoStr = null;
+let firstOperand = null;
+let secondOperand = null;
+let operator = null;
 
 const updateDisplay = () => {
-  let displayElem = document.querySelector("#display");
-
-  if (displayValueStr.length > 1 && displayValueStr.startsWith("0")) {
-    displayValueStr = displayValueStr.substring(1);
+  if (currentOperandStr.length > 1 && currentOperandStr.startsWith("0")) {
+    currentOperandStr = currentOperandStr.substring(1);
   }
 
-  displayElem.textContent = displayValueStr;
+  document.querySelector("#current-operand").textContent = currentOperandStr;
+  document.querySelector("#memo").textContent = memoStr;
 };
 
 const updateCurrentOperand = (clickedTarget) => {
   switch (clickedTarget.id) {
     case "del":
-      if (displayValueStr.length === 1) {
-        displayValueStr = "0";
+      if (currentOperandStr.length === 1) {
+        currentOperandStr = "0";
       } else {
-        displayValueStr = displayValueStr.substring(
+        currentOperandStr = currentOperandStr.substring(
           0,
-          displayValueStr.length - 1,
+          currentOperandStr.length - 1,
         );
       }
       break;
     case "negate":
-      if (displayValueStr.startsWith("-")) {
-        displayValueStr = displayValueStr.substring(1);
+      if (currentOperandStr.startsWith("-")) {
+        currentOperandStr = currentOperandStr.substring(1);
       } else {
-        displayValueStr = "-" + displayValueStr;
+        currentOperandStr = "-" + currentOperandStr;
       }
       break;
     default:
-      displayValueStr += clickedTarget.value;
+      currentOperandStr += clickedTarget.value;
       break;
   }
+};
+
+// TODO: Pressing an operator twice after the first operand
+// is entered will pull the '0' from the display and replace
+// the first operand.
+const onOperatorClick = (clickedTarget) => {
+  parsedOperand = Number.parseFloat(currentOperandStr);
+
+  if (isNaN(parsedOperand)) {
+    console.log("cannot operate on non-number");
+    return;
+  }
+
+  firstOperand = parsedOperand;
+  secondOperand = null;
+  currentOperandStr = "0";
+
+  setOperator(clickedTarget.value);
+
+  memoStr = `${firstOperand} ${operator}`;
+
+  console.log(`calculating: ${firstOperand} ${operator}`);
+};
+
+const setOperator = (op) => {
+  operator = op;
 };
 
 const clear = () => {
-  displayValueStr = "0";
-  firstOperand = 0;
-  secondOperand = 0;
-  operator = "";
+  currentOperandStr = "0";
+  memoStr = null;
+  firstOperand = null;
+  secondOperand = null;
+  operator = null;
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateDisplay();
-});
+const equals = () => {
+  if (!Number.isNaN(firstOperand) && !Number.isNaN(secondOperand)) {
+    if (secondOperand === null) {
+      parsedOperand = Number.parseFloat(currentOperandStr);
 
-const calculator = document.querySelector("#calculator");
-calculator.addEventListener("click", (event) => {
-  const clickedTarget = event.target;
+      if (isNaN(parsedOperand)) {
+        console.log("cannot operate on non-number");
+        return;
+      }
 
-  switch (clickedTarget.className) {
-    case "operand":
-      updateCurrentOperand(clickedTarget);
-      updateDisplay();
-      break;
-    case "operator":
-      console.log("operator clicked!");
-      break;
-    case "clear":
-      clear();
-      updateDisplay();
-      break;
-    case "equals":
-      console.log("equals clicked!");
-      break;
-    default:
-      break;
+      secondOperand = parsedOperand;
+      memoStr = `${firstOperand} ${operator} ${secondOperand} =`;
+
+      currentOperandStr = operate(
+        firstOperand,
+        secondOperand,
+        operator,
+      ).toString();
+    }
+  } else {
+    console.log("one of the operands is not a number");
   }
-});
-
-/*
-let NUM1 = 0;
-let NUM2 = 0;
-let OP = "";
-let RESULT = 0;
+};
 
 const add = (num1, num2) => {
   return num1 + num2;
@@ -92,7 +109,6 @@ const multiply = (num1, num2) => {
 };
 
 const divide = (num1, num2) => {
-  // TODO:: Divide by zero results in `Infinity`, proper error handling / display?
   if (num2 === 0) {
     console.log("Cannot divide by 0.");
     return;
@@ -102,11 +118,6 @@ const divide = (num1, num2) => {
 };
 
 const operate = (num1, num2, op) => {
-  if (!isNumber(num1) || !isNumber(num2)) {
-    console.log("Cannot operate on non-numeric inputs.");
-    return;
-  }
-
   switch (op) {
     case "+":
       return add(num1, num2);
@@ -124,4 +135,31 @@ const operate = (num1, num2, op) => {
 const isNumber = (num) => {
   return typeof num === "number" && !isNaN(num);
 };
-*/
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateDisplay();
+});
+
+const calculator = document.querySelector("#calculator");
+calculator.addEventListener("click", (event) => {
+  const clickedTarget = event.target;
+
+  switch (clickedTarget.className) {
+    case "operand":
+      updateCurrentOperand(clickedTarget);
+      break;
+    case "operator":
+      onOperatorClick(clickedTarget);
+      break;
+    case "clear":
+      clear();
+      break;
+    case "equals":
+      equals();
+      break;
+    default:
+      break;
+  }
+
+  updateDisplay();
+});
