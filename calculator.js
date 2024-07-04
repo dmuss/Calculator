@@ -16,7 +16,10 @@ const updateDisplay = () => {
 
 const updateOperandByTargetID = (target) => {
   switch (target.id) {
-    case "del":
+    case "clear":
+      displayStr = "0";
+      break;
+    case "backspace":
       deleteLeastSignificantDigit();
       break;
     case "negate":
@@ -185,7 +188,7 @@ calculator.addEventListener("click", (event) => {
     case "operator":
       operatorClicked(target);
       break;
-    case "clear":
+    case "all-clear":
       reset();
       break;
     case "equals":
