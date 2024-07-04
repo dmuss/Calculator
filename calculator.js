@@ -115,8 +115,10 @@ const reset = (newDisplayStr = "0") => {
   secondOperand = null;
   opStr = null;
 
-  currOpBtn.style.backgroundColor = "white";
-  currOpBtn = null;
+  if (currOpBtn !== null) {
+    currOpBtn.style.backgroundColor = "white";
+    currOpBtn = null;
+  }
 };
 
 const equalsPressed = () => {
