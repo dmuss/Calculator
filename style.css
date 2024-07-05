@@ -107,6 +107,8 @@ p {
 }
 
 dialog {
+  background-color: var(--num-btn-bg);
+  color: var(--num-btn-font-color);
   margin: auto auto;
 }
 
@@ -195,16 +197,19 @@ button:active {
   background-color: var(--op-btn-hover);
 }
 
-.clear-btn {
+.clear-btn,
+.close {
   color: var(--clear-btn-font-color);
   background-color: var(--clear-btn-bg);
 }
 
-.clear-btn:hover {
+.clear-btn:hover,
+.close:hover {
   background-color: var(--clear-btn-hover);
 }
 
-.clear-btn:active {
+.clear-btn:active,
+.close:active {
   background-color: var(--clear-btn-active);
 }
 
