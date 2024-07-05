@@ -162,7 +162,7 @@ const multiply = (num1, num2) => {
 
 const divide = (num1, num2) => {
   if (num2 === 0 || isNaN(num2)) {
-    throw new Error("Cannot divide by zero!");
+    throw new Error("Cannot divide by zero! Resetting the calculator!");
   }
 
   return num1 / num2;
