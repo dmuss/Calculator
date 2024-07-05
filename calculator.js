@@ -133,15 +133,19 @@ const equalsPressed = () => {
   } else {
     secondOperand = Number.parseFloat(displayStr);
 
-    result = operate(firstOperand, secondOperand, opStr);
-
-    if (result === "ERROR") {
-      divByZeroDialog.showModal();
-      reset();
-    } else {
+    try {
+      result = operate(firstOperand, secondOperand, opStr);
       reset(result.toString());
+    } catch (e) {
+      showErrorDialogWithText(e.message);
+      reset();
     }
   }
+};
+
+const showErrorDialogWithText = (text) => {
+  errDialog.firstElementChild.innerText = text;
+  errDialog.showModal();
 };
 
 const add = (num1, num2) => {
@@ -158,7 +162,7 @@ const multiply = (num1, num2) => {
 
 const divide = (num1, num2) => {
   if (num2 === 0 || isNaN(num2)) {
-    return "ERROR";
+    throw new Error("Cannot divide by zero!");
   }
 
   return num1 / num2;
@@ -241,8 +245,8 @@ calculator.addEventListener("click", (event) => {
   updateDisplay();
 });
 
-const divByZeroDialog = document.querySelector("dialog");
+const errDialog = document.querySelector("dialog");
 const dialogCloseBtn = document.querySelector("button.close");
 dialogCloseBtn.addEventListener("click", () => {
-  divByZeroDialog.close();
+  errDialog.close();
 });
