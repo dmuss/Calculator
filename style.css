@@ -106,6 +106,14 @@ p {
   margin: 0 5px;
 }
 
+dialog {
+  margin: auto auto;
+}
+
+dialog::backdrop {
+  background-color: rgba(20, 20, 20, 0.66);
+}
+
 #calculator {
   background-color: var(--calc-bg);
   border: 20px solid var(--calc-bg);

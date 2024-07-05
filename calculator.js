@@ -124,16 +124,19 @@ const reset = (newDisplayStr = "0") => {
 
 const equalsPressed = () => {
   // Cannot evaluate an operation without first operand or operator.
-  if (firstOperand === null) {
+  if (!firstOperand) {
     return;
   } else {
     secondOperand = Number.parseFloat(displayStr);
 
     result = operate(firstOperand, secondOperand, opStr);
 
-    // TODO: Need error-handling for divide-by-zero issues here.
-
-    reset(result.toString());
+    if (result === "ERROR") {
+      divByZeroDialog.showModal();
+      reset();
+    } else {
+      reset(result.toString());
+    }
   }
 };
 
@@ -150,8 +153,8 @@ const multiply = (num1, num2) => {
 };
 
 const divide = (num1, num2) => {
-  if (num2 === 0) {
-    return;
+  if (num2 === 0 || isNaN(num2)) {
+    return "ERROR";
   }
 
   return num1 / num2;
@@ -232,4 +235,10 @@ calculator.addEventListener("click", (event) => {
   }
 
   updateDisplay();
+});
+
+const divByZeroDialog = document.querySelector("dialog");
+const dialogCloseBtn = document.querySelector("button.close");
+dialogCloseBtn.addEventListener("click", () => {
+  divByZeroDialog.close();
 });
