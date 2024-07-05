@@ -170,30 +170,49 @@ const operate = (num1, num2, op) => {
   }
 };
 
-/*******************
- * EVENT LISTENERS *
- *******************/
+/***
+ * Tries to set the theme from local storage, otherwise sets a default theme.
+ */
+const trySetThemeFromLocalStorage = () => {
+  const currentTheme = localStorage.getItem("theme");
+  if (currentTheme) {
+    document.documentElement.setAttribute("data-theme", currentTheme);
+  } else {
+    setTheme("light");
+  }
+};
+
+const toggleTheme = () => {
+  const currentTheme = localStorage.getItem("theme");
+  if (currentTheme === "dark") {
+    setTheme("light");
+  } else {
+    setTheme("dark");
+  }
+};
+
+const setTheme = (theme) => {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+};
+
+/**************************
+ * DOM && EVENT LISTENERS *
+ **************************/
 
 document.addEventListener("DOMContentLoaded", () => {
   updateDisplay();
-
-  const currentTheme = localStorage.getItem("theme");
-
-  if (currentTheme) {
-    document.documentElement.setAttribute("data-theme", currentTheme);
-
-    if (currentTheme === "dark") {
-      const themeToggleSwitch = document.querySelector(
-        '.theme-switch input[type="checkbox"]',
-      );
-      themeToggleSwitch.checked = true;
-    }
-  }
+  trySetThemeFromLocalStorage();
 });
 
 const calculator = document.querySelector("#calculator");
 calculator.addEventListener("click", (event) => {
   const target = event.target;
+
+  if (target.id === "theme-btn") {
+    toggleTheme();
+  }
+
   const targetClasses = target.className;
 
   if (targetClasses.includes("operand")) {
@@ -213,17 +232,4 @@ calculator.addEventListener("click", (event) => {
   }
 
   updateDisplay();
-});
-
-const themeToggleSwitch = document.querySelector(
-  '.theme-switch input[type="checkbox"]',
-);
-themeToggleSwitch.addEventListener("change", (event) => {
-  if (event.target.checked) {
-    document.documentElement.setAttribute("data-theme", "dark");
-    localStorage.setItem("theme", "dark");
-  } else {
-    document.documentElement.setAttribute("data-theme", "light");
-    localStorage.setItem("theme", "light");
-  }
 });

@@ -89,6 +89,7 @@ h6 {
 
 main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 95vh;
@@ -101,15 +102,33 @@ button {
   border-radius: 10px;
 }
 
+p {
+  margin: 0 5px;
+}
+
 #calculator {
   background-color: var(--calc-bg);
   border: 20px solid var(--calc-bg);
   display: grid;
-  grid-template-columns: repeat(4, minmax(100px, 1fr));
-  grid-template-rows: repeat(6, minmax(100px, 1fr));
+  grid-template-columns: repeat(4, 75px);
+  grid-template-rows: 35px repeat(6, 75px);
   overflow: hidden;
   gap: 8px;
   flex: 0 0 auto;
+}
+
+#calc-name {
+  grid-column: 1 / 4;
+  color: var(--num-btn-bg);
+  font-size: 1.33rem;
+  text-align: left;
+}
+
+#theme-btn {
+  grid-column: 4;
+  font-weight: normal;
+  font-size: 1.33rem;
+  border-radius: 25px;
 }
 
 #display {
@@ -118,12 +137,11 @@ button {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding-right: 5%;
 }
 
 #memo {
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: normal;
   align-self: flex-start;
   padding-left: 5%;
@@ -224,11 +242,11 @@ button:active {
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: var(--op-btn-bg);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  box-shadow: 0 0 1px var(--op-btn-bg);
 }
 
 input:checked + .slider:before {
