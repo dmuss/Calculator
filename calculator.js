@@ -1,4 +1,4 @@
-const MAX_DISPLAY_CHARS = 13;
+const MAX_DISPLAY_DIGITS = 12;
 
 let displayStr = "0";
 let memoStr = "";
@@ -61,7 +61,7 @@ const negateCurrentOperand = () => {
 const updateDisplayStrWithTargetContent = (target) => {
   if (
     !(target.textContent === "." && displayStr.includes(".")) &&
-    displayStr.length <= MAX_DISPLAY_CHARS
+    displayStr.length < MAX_DISPLAY_DIGITS
   ) {
     displayStr += target.textContent;
   }
@@ -79,6 +79,7 @@ const operatorClicked = (clickedTarget) => {
     firstOperand = Number.parseFloat(displayStr);
     displayStr = "0";
 
+    // TODO: Move these two lines into function.
     updateCurrentOperatorByBtnID(clickedTarget.id);
     memoStr = `${firstOperand} ${opStr}`;
   } else if (secondOperand === null && displayStr !== "0") {
@@ -114,7 +115,7 @@ const updateAndHighlightCurrentOpBtnByID = (id) => {
  * @param {newOperandStr} - The new value to be displayed to the user.
  */
 const reset = (newDisplayStr = "0") => {
-  displayStr = newDisplayStr;
+  displayStr = fitDisplayStrToDisplay(newDisplayStr);
   memoStr = "";
   firstOperand = null;
   secondOperand = null;
@@ -126,6 +127,29 @@ const reset = (newDisplayStr = "0") => {
   }
 };
 
+/***
+ * The display can show a maximum of `MAX_DISPLAY_DIGITS`. If the
+ * provided string is longer than that, convert it to an approximate
+ * E notation that will fit within the maximum number of digits.
+ */
+const fitDisplayStrToDisplay = (str) => {
+  if (str.length > MAX_DISPLAY_DIGITS) {
+    str = Number.parseFloat(str).toExponential().toString();
+
+    const [significandStr, expStr] = str.split("e+");
+
+    // Keep space for "e" by subtracting an additional 1.
+    const maxSignificandLen = MAX_DISPLAY_DIGITS - expStr.length - 1;
+
+    // Though not mathematically accurate, trim digits from the right side of
+    // the significand string and recompose the display string with the
+    // exponent.
+    str = significandStr.substring(0, maxSignificandLen) + "e" + expStr;
+  }
+
+  return str;
+};
+
 const equalsPressed = () => {
   // Cannot evaluate an operation without first operand or operator.
   if (!firstOperand) {
@@ -135,6 +159,7 @@ const equalsPressed = () => {
 
     try {
       result = operate(firstOperand, secondOperand, opStr);
+      firstOperand = result;
       reset(result.toString());
     } catch (e) {
       showErrorDialogWithText(e.message);
@@ -169,16 +194,24 @@ const divide = (num1, num2) => {
 };
 
 const operate = (num1, num2, op) => {
+  let result = null;
+
   switch (op) {
     case "+":
-      return add(num1, num2);
+      result = add(num1, num2);
+      break;
     case "-":
-      return subtract(num1, num2);
+      result = subtract(num1, num2);
+      break;
     case "*":
-      return multiply(num1, num2);
+      result = multiply(num1, num2);
+      break;
     case "/":
-      return divide(num1, num2);
+      result = divide(num1, num2);
+      break;
   }
+
+  return result;
 };
 
 /***
