@@ -18,13 +18,13 @@ const updateDisplay = () => {
 
 const updateOperandByTargetID = (target) => {
   switch (target.id) {
-    case "clear":
+    case "clear-btn":
       displayStr = "0";
       break;
-    case "backspace":
+    case "back-btn":
       deleteLeastSignificantDigit();
       break;
-    case "negate":
+    case "negate-btn":
       negateCurrentOperand();
       break;
     // All buttons without specific `id`s update the currently displayed
@@ -60,7 +60,7 @@ const negateCurrentOperand = () => {
  */
 const updateDisplayStrWithTargetContent = (target) => {
   if (
-    !(target.textContent === "." && displayStr.includes(".")) &&
+    !(target.id === "decimal-btn" && displayStr.includes(".")) &&
     displayStr.length < MAX_DISPLAY_DIGITS
   ) {
     displayStr += target.textContent;
@@ -152,7 +152,7 @@ const fitDisplayStrToDisplay = (str) => {
 
 const equalsPressed = () => {
   // Cannot evaluate an operation without first operand or operator.
-  if (!firstOperand) {
+  if (!firstOperand || !opStr) {
     return;
   } else {
     secondOperand = Number.parseFloat(displayStr);
@@ -187,7 +187,7 @@ const multiply = (num1, num2) => {
 
 const divide = (num1, num2) => {
   if (num2 === 0 || isNaN(num2)) {
-    throw new Error("Cannot divide by zero! Resetting the calculator!");
+    throw new Error("Cannot divide by zero!");
   }
 
   return num1 / num2;
