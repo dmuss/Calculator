@@ -1,3 +1,5 @@
+const MAX_DISPLAY_CHARS = 13;
+
 let displayStr = "0";
 let memoStr = "";
 let firstOperand = null;
@@ -57,8 +59,10 @@ const negateCurrentOperand = () => {
  * the value of the clicked button to the display.
  */
 const updateDisplayStrWithTargetContent = (target) => {
-  // TODO: Use `disabled` attribute to control number of decimal points?
-  if (!(target.textContent === "." && displayStr.includes("."))) {
+  if (
+    !(target.textContent === "." && displayStr.includes(".")) &&
+    displayStr.length <= MAX_DISPLAY_CHARS
+  ) {
     displayStr += target.textContent;
   }
 };
