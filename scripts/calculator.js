@@ -141,7 +141,7 @@ export class Calculator {
   }
 
   static #parseDisplay() {
-    const parsedDisplay = Number.parseFloat(this.#displayStr);
+    const parsedDisplay = parseFloat(this.#displayStr);
 
     if (isNaN(parsedDisplay)) {
       throw new DisplayParseError(
@@ -173,7 +173,7 @@ export class Calculator {
   }
 
   static #fitToDisplay(newDisplayStr) {
-    newDisplayStr = Number.parseFloat(newDisplayStr).toExponential().toString();
+    newDisplayStr = parseFloat(newDisplayStr).toExponential().toString();
 
     if (newDisplayStr.length <= MAX_DISPLAY_DIGITS) {
       return newDisplayStr;
