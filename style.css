@@ -176,20 +176,23 @@ button:active {
   padding-right: 9px;
 }
 
-.op-btn {
+.op-btn,
+.equals {
   color: var(--op-btn-font-color);
   background-color: var(--op-btn-bg);
 }
 
-.op-btn:hover {
+.op-btn:hover,
+.equals:hover {
   background-color: var(--op-btn-hover);
 }
 
-.op-btn:active {
+.op-btn:active,
+.equals:active {
   background-color: var(--op-btn-active);
 }
 
-.op-btn:disabled {
+.op-btn:focus {
   background-color: var(--op-btn-hover);
 }
 
