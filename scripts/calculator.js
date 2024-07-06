@@ -11,10 +11,6 @@ export class Calculator {
   static #opStr = null;
 
   static get displayStr() {
-    if (this.#displayStr.length > 1 && this.#displayStr.startsWith("0")) {
-      this.#displayStr = this.#displayStr.substring(1);
-    }
-
     return this.#displayStr;
   }
 
@@ -59,6 +55,11 @@ export class Calculator {
       return;
     } else {
       this.#displayStr += char;
+
+      // Trim leading zeros on integers.
+      if (this.#displayStr.length > 1 && this.#displayStr.startsWith("0")) {
+        this.#displayStr = this.#displayStr.substring(1);
+      }
     }
   }
 
