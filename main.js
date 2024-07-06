@@ -41,7 +41,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => {
   const key = event.key;
 
-  if (key >= "0" && key <= "9") {
+  if ((key >= "0" && key <= "9") || key == ".") {
     Calc.pushDisplay(event.key);
   }
 
