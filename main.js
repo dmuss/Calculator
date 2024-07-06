@@ -122,7 +122,6 @@ calc.addEventListener("click", (event) => {
   } catch (err) {
     if (err instanceof DisplayParseError) {
       clearFocus();
-
       focusOperatorBtn(Calc.opStr);
     }
 

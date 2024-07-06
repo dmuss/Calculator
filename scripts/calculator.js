@@ -1,5 +1,5 @@
 import { operate } from "./math.js";
-import { DisplayParseError } from "./errors.js";
+import { DivByZeroError, DisplayParseError } from "./errors.js";
 
 const MAX_DISPLAY_DIGITS = 12;
 const DEFAULT_DISPLAY_STR = "0";
