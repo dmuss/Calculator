@@ -18,8 +18,8 @@ export class Calculator {
     return this.#memoStr;
   }
 
-  static get opButtonsAvailable() {
-    return !(!this.#firstOperand && this.#displayStr === "0");
+  static get opStr() {
+    return this.#opStr;
   }
 
   static backspace() {
