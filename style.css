@@ -162,6 +162,7 @@ dialog::backdrop {
 button {
   color: var(--num-btn-font-color);
   background-color: var(--num-btn-bg);
+  outline: none;
 }
 
 button:hover {

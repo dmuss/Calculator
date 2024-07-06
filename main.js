@@ -10,6 +10,70 @@ document.addEventListener("DOMContentLoaded", () => {
   setThemeFromLocalStorageOrDefault();
 });
 
+/********************
+ * KEYBOARD SUPPORT *
+ ********************/
+function downKeyIsCalcKey(key) {
+  return (
+    (key >= "0" && key <= "9") ||
+    [
+      ".",
+      "+",
+      "-",
+      "*",
+      "/",
+      "=",
+      "Backspace",
+      "Delete",
+      "Escape",
+      "Enter",
+    ].includes(key)
+  );
+}
+
+document.addEventListener("keydown", (event) => {
+  if (downKeyIsCalcKey(event.key)) {
+    event.preventDefault();
+    return false;
+  }
+});
+
+document.addEventListener("keyup", (event) => {
+  const key = event.key;
+
+  if (key >= "0" && key <= "9") {
+    Calc.pushDisplay(event.key);
+  }
+
+  if (["+", "-", "*", "/"].includes(key)) {
+    Calc.setOperator(key);
+    focusOperatorBtn(key);
+  }
+
+  if (["=", "Enter"].includes(key)) {
+    Calc.equals();
+    clearFocus();
+  }
+
+  if (key === "Backspace") {
+    Calc.backspace();
+  }
+
+  if (key === "Delete") {
+    Calc.clearDisplay();
+  }
+
+  if (key === "Escape") {
+    Calc.allClear();
+  }
+
+  if (key === "t" || key === "T") {
+    toggleTheme();
+  }
+
+  updateCalcDisplay();
+});
+
 /**************
  * CALCULATOR *
  **************/
@@ -57,9 +121,7 @@ calc.addEventListener("click", (event) => {
     updateCalcDisplay();
   } catch (err) {
     if (err instanceof DisplayParseError) {
-      if (document.hasFocus()) {
-        document.activeElement.blur();
-      }
+      clearFocus();
 
       focusOperatorBtn(Calc.opStr);
     }
@@ -71,6 +133,12 @@ calc.addEventListener("click", (event) => {
     updateCalcDisplay();
   }
 });
+
+function clearFocus() {
+  if (document.hasFocus()) {
+    document.activeElement.blur();
+  }
+}
 
 function focusOperatorBtn(char) {
   switch (char) {
