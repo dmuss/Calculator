@@ -79,7 +79,6 @@ document.addEventListener("keyup", (event) => {
  **************/
 const calc = document.querySelector("#calculator");
 calc.addEventListener("click", (event) => {
-  // TODO: Can this be tightened up?
   try {
     const target = event.target;
 
@@ -90,20 +89,7 @@ calc.addEventListener("click", (event) => {
     const targetClasses = target.className;
 
     if (targetClasses.includes("operand")) {
-      switch (target.id) {
-        case "clear-btn":
-          Calc.clearDisplay();
-          break;
-        case "back-btn":
-          Calc.backspace();
-          break;
-        case "negate-btn":
-          Calc.negateDisplay();
-          break;
-        default:
-          Calc.pushDisplay(target.textContent);
-          break;
-      }
+      onOperandClick(target.id);
     }
 
     if (targetClasses.includes("operator")) {
@@ -132,6 +118,23 @@ calc.addEventListener("click", (event) => {
     updateCalcDisplay();
   }
 });
+
+function onOperandClick(id) {
+  switch (id) {
+    case "clear-btn":
+      Calc.clearDisplay();
+      break;
+    case "back-btn":
+      Calc.backspace();
+      break;
+    case "negate-btn":
+      Calc.negateDisplay();
+      break;
+    default:
+      Calc.pushDisplay(target.textContent);
+      break;
+  }
+}
 
 function clearFocus() {
   if (document.hasFocus()) {

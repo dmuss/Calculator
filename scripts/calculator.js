@@ -92,12 +92,11 @@ export class Calculator {
       this.#setOpStrAndUpdateMemoStr(char);
       this.clearDisplay();
     } catch (err) {
-      // TODO: Can this be cleaner?
-      this.#secondOperand = null;
-
       if (this.#firstOperand !== null) {
         this.#setOpStrAndUpdateMemoStr(char);
       }
+
+      this.#secondOperand = null;
 
       this.clearDisplay();
       throw err;
