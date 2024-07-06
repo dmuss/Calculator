@@ -81,11 +81,18 @@ export class Calculator {
       } else {
         this.#secondOperand = parsedDisplay;
 
-        this.#firstOperand = operate(
+        // Similar to approximating the result when the user presses equals,
+        // approximate the result of the equation to prevent the memo string
+        // from overflowing.
+        let operationResultStr = operate(
           this.#firstOperand,
           this.#secondOperand,
           this.#opStr,
-        );
+        ).toString();
+
+        operationResultStr = this.#fitToDisplay(operationResultStr);
+
+        this.#firstOperand = parseFloat(operationResultStr);
 
         this.#secondOperand = null;
       }
@@ -174,10 +181,9 @@ export class Calculator {
         .toExponential()
         .toString();
 
-      const [significandStr, expStr] = newDisplayStr.split("e+");
+      const [significandStr, expStr] = newDisplayStr.split("e");
 
-      // Keep space for "e" by subtracting an additional 1.
-      const maxSignificandLen = MAX_DISPLAY_DIGITS - expStr.length - 1;
+      const maxSignificandLen = MAX_DISPLAY_DIGITS - expStr.length;
 
       // Though not mathematically accurate, trim digits from the right side of
       // the significand string and recompose the display string with the
