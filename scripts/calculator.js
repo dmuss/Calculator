@@ -173,15 +173,16 @@ export class Calculator {
         .toExponential()
         .toString();
 
-      const [significandStr, expStr] = newDisplayStr.split("e");
-
-      const maxSignificandLen = MAX_DISPLAY_DIGITS - expStr.length;
+      const splitIdx = newDisplayStr.indexOf("e");
+      const significandStr = newDisplayStr.substring(0, splitIdx);
+      const expStr = newDisplayStr.substring(splitIdx);
 
       // Though not mathematically accurate, trim digits from the right side of
       // the significand string and recompose the display string with the
       // exponent.
       newDisplayStr =
-        significandStr.substring(0, maxSignificandLen) + "e" + expStr;
+        significandStr.substring(0, MAX_DISPLAY_DIGITS - expStr.length) +
+        expStr;
     }
 
     return newDisplayStr;
