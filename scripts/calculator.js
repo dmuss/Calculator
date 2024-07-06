@@ -64,53 +64,89 @@ export class Calculator {
   }
 
   static setOperator(char) {
-    // If the first operand is not set, set it, update the memo string, and
-    // clear the display to default.
-    if (!this.#firstOperand) {
-      this.#firstOperand = Number.parseFloat(this.#displayStr);
+    const parsedDisplay = Number.parseFloat(this.#displayStr);
 
-      this.#setOpStrAndUpdateMemoStr(char);
-
-      this.clearDisplay();
-    }
-    // If the second operand isn't set and the display contains a number,
-    // calculate the result of the operation and use that result as the
-    // first operand of a new operation.
-    else if (!this.#secondOperand && this.#displayStr !== DEFAULT_DISPLAY_STR) {
-      this.#secondOperand = Number.parseFloat(this.#displayStr);
-
-      this.#firstOperand = operate(
-        this.#firstOperand,
-        this.#secondOperand,
-        this.#opStr,
-      );
-
-      this.#secondOperand = null;
-
-      this.#setOpStrAndUpdateMemoStr(char);
+    if (isNaN(parsedDisplay)) {
+      if (this.#firstOperand) {
+        this.#setOpStrAndUpdateMemoStr(char);
+      }
 
       this.clearDisplay();
-    }
-    // Otherwise, update the operator using the current first operand.
-    else {
-      this.#setOpStrAndUpdateMemoStr(char);
+
+      throw RangeError("Entered an invalid number!");
+    } else {
+      // If the first operand is not set, set it, update the memo string, and
+      // clear the display to default.
+      if (!this.#firstOperand) {
+        this.#firstOperand = parsedDisplay;
+
+        this.#setOpStrAndUpdateMemoStr(char);
+
+        this.clearDisplay();
+      }
+      // If the second operand isn't set and the display contains a number,
+      // calculate the result of the operation and use that result as the
+      // first operand of a new operation.
+      else if (!this.#secondOperand) {
+        try {
+          this.#secondOperand = parsedDisplay;
+
+          this.#firstOperand = operate(
+            this.#firstOperand,
+            this.#secondOperand,
+            this.#opStr,
+          );
+
+          this.#secondOperand = null;
+
+          this.#setOpStrAndUpdateMemoStr(char);
+
+          this.clearDisplay();
+        } catch (err) {
+          this.#secondOperand = null;
+
+          this.#setOpStrAndUpdateMemoStr(char);
+
+          this.clearDisplay();
+
+          throw err;
+        }
+      }
+      // Otherwise, update the operator using the current first operand.
+      else {
+        this.#setOpStrAndUpdateMemoStr(char);
+      }
     }
   }
 
   static equals() {
-    // Cannot evaluate an operation without the first operand.
-    if (!this.#firstOperand) {
-      return;
-    } else {
-      this.#secondOperand = Number.parseFloat(this.#displayStr);
+    const parsedDisplay = Number.parseFloat(this.#displayStr);
 
-      let result = operate(
-        this.#firstOperand,
-        this.#secondOperand,
-        this.#opStr,
-      );
-      this.#firstOperand = result;
-      this.#reset(result.toString());
+    if (isNaN(parsedDisplay)) {
+      this.clearDisplay();
+
+      throw RangeError("Entered an invalid number!");
+    } else {
+      // Cannot evaluate an operation without the first operand.
+      if (!this.#firstOperand) {
+        return;
+      } else {
+        try {
+          this.#secondOperand = parsedDisplay;
+
+          let result = operate(
+            this.#firstOperand,
+            this.#secondOperand,
+            this.#opStr,
+          );
+
+          this.#firstOperand = result;
+          this.#reset(result.toString());
+        } catch (err) {
+          this.allClear();
+          throw err;
+        }
+      }
     }
   }
 

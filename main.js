@@ -48,9 +48,32 @@ calculator.addEventListener("click", (event) => {
     }
 
     updateDisplay();
-  } catch (e) {
-    showErrorDialogWithText(e.message);
-    Calc.allClear();
+  } catch (err) {
+    if (err instanceof RangeError) {
+      if (document.hasFocus()) {
+        document.activeElement.blur();
+      }
+
+      switch (Calc.opStr) {
+        case "+":
+          document.querySelector("#add-btn").focus();
+          break;
+        case "-":
+          document.querySelector("#sub-btn");
+          break;
+        case "*":
+          document.querySelector("#mul-btn");
+          break;
+        case "/":
+          document.querySelector("#div-btn");
+          break;
+        default:
+          break;
+      }
+    } else {
+      showErrorDialogWithText(err.message);
+    }
+
     updateDisplay();
   }
 });
