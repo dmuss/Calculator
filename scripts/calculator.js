@@ -159,7 +159,12 @@ export class Calculator {
   }
 
   static #reset(newDisplayStr = DEFAULT_DISPLAY_STR) {
-    this.#displayStr = this.#fitToDisplay(newDisplayStr);
+    if (newDisplayStr.length <= MAX_DISPLAY_DIGITS) {
+      this.#displayStr = newDisplayStr;
+    } else {
+      this.#displayStr = this.#fitToDisplay(newDisplayStr);
+    }
+
     this.#memoStr = "";
 
     this.#firstOperand = null;
@@ -168,23 +173,25 @@ export class Calculator {
   }
 
   static #fitToDisplay(newDisplayStr) {
-    if (newDisplayStr.length > MAX_DISPLAY_DIGITS) {
-      newDisplayStr = Number.parseFloat(newDisplayStr)
-        .toExponential()
-        .toString();
+    newDisplayStr = Number.parseFloat(newDisplayStr).toExponential().toString();
 
+    if (newDisplayStr.length <= MAX_DISPLAY_DIGITS) {
+      return newDisplayStr;
+    } else {
       const splitIdx = newDisplayStr.indexOf("e");
       const significandStr = newDisplayStr.substring(0, splitIdx);
       const expStr = newDisplayStr.substring(splitIdx);
 
-      // Though not mathematically accurate, trim digits from the right side of
-      // the significand string and recompose the display string with the
-      // exponent.
-      newDisplayStr =
-        significandStr.substring(0, MAX_DISPLAY_DIGITS - expStr.length) +
-        expStr;
-    }
+      let maxDecimalPlaces =
+        MAX_DISPLAY_DIGITS -
+        expStr.length -
+        (significandStr.indexOf(".") + 1) -
+        1;
 
-    return newDisplayStr;
+      newDisplayStr =
+        parseFloat(significandStr).toFixed(maxDecimalPlaces) + expStr;
+
+      return newDisplayStr;
+    }
   }
 }
