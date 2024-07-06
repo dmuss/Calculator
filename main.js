@@ -1,14 +1,20 @@
-import { trySetThemeFromLocalStorage, toggleTheme } from "./scripts/themes.js";
+import {
+  setThemeFromLocalStorageOrDefault,
+  toggleTheme,
+} from "./scripts/themes.js";
 import { Calculator as Calc } from "./scripts/calculator.js";
 import { DivByZeroError, DisplayParseError } from "./scripts/errors.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateDisplay();
-  trySetThemeFromLocalStorage();
+  updateCalcDisplay();
+  setThemeFromLocalStorageOrDefault();
 });
 
-const calculator = document.querySelector("#calculator");
-calculator.addEventListener("click", (event) => {
+/**************
+ * CALCULATOR *
+ **************/
+const calc = document.querySelector("#calculator");
+calc.addEventListener("click", (event) => {
   // TODO: Can this be tightened up?
   try {
     const target = event.target;
@@ -48,7 +54,7 @@ calculator.addEventListener("click", (event) => {
       Calc.equals();
     }
 
-    updateDisplay();
+    updateCalcDisplay();
   } catch (err) {
     if (err instanceof DisplayParseError) {
       if (document.hasFocus()) {
@@ -59,10 +65,10 @@ calculator.addEventListener("click", (event) => {
     }
 
     if (err instanceof DivByZeroError) {
-      showErrorDialogWithText(err.message);
+      showErrorModalWithText(err.message);
     }
 
-    updateDisplay();
+    updateCalcDisplay();
   }
 });
 
@@ -85,18 +91,27 @@ function focusOperatorBtn(char) {
   }
 }
 
+/**********************
+ * CALCULATOR DISPLAY *
+ **********************/
+const calcDisplayElem = document.querySelector("#display");
+const calcMemoElem = document.querySelector("#display-memo");
+
+function updateCalcDisplay() {
+  calcDisplayElem.textContent = Calc.displayStr;
+  calcMemoElem.textContent = Calc.memoStr;
+}
+
+/***************
+ * ERROR MODAL *
+ ***************/
 const errDialog = document.querySelector("dialog");
 const errDialogOkBtn = document.querySelector("button.close");
 errDialogOkBtn.addEventListener("click", () => {
   errDialog.close();
 });
 
-const updateDisplay = () => {
-  document.querySelector("#current-operand").textContent = Calc.displayStr;
-  document.querySelector("#memo").textContent = Calc.memoStr;
-};
-
-const showErrorDialogWithText = (text) => {
+function showErrorModalWithText(text) {
   errDialog.firstElementChild.innerText = text;
   errDialog.showModal();
-};
+}
