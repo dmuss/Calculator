@@ -65,20 +65,12 @@ export class Calculator {
   }
 
   static setOperator(char) {
-    /* TODO: Instructions say that calculator should not evaluate more than
-     * a single pair of numbers at a time. This currently parses whatever is
-     * in the display if the first operand is set and evaluates the equation.
-     * This feels disruptive when you accidentally divide or multiply by zero.
-     * Would it make more sense to not operate if the second operand is
-     * equivalent to zero? This will prevent (first * 0 === 0), but if the user
-     * really wanted to do that they could hit `=`, or all clear the calculator.
-     */
     try {
       const parsedDisplay = this.#parseDisplay();
 
       if (this.#firstOperand === null) {
         this.#firstOperand = parsedDisplay;
-      } else {
+      } else if (this.#displayStr != DEFAULT_DISPLAY_STR) {
         this.#secondOperand = parsedDisplay;
 
         // Similar to approximating the result when the user presses equals,
