@@ -1,4 +1,5 @@
 import { operate } from "./math.js";
+import { DisplayParseError } from "./errors.js";
 
 const MAX_DISPLAY_DIGITS = 12;
 const DEFAULT_DISPLAY_STR = "0";
@@ -64,94 +65,93 @@ export class Calculator {
   }
 
   static setOperator(char) {
-    const parsedDisplay = Number.parseFloat(this.#displayStr);
+    /* TODO: Instructions say that calculator should not evaluate more than
+     * a single pair of numbers at a time. This currently parses whatever is
+     * in the display if the first operand is set and evaluates the equation.
+     * This feels disruptive when you accidentally divide or multiply by zero.
+     * Would it make more sense to not operate if the second operand is
+     * equivalent to zero? This will prevent (first * 0 === 0), but if the user
+     * really wanted to do that they could hit `=`, or all clear the calculator.
+     */
+    try {
+      const parsedDisplay = this.#parseDisplay();
 
-    if (isNaN(parsedDisplay)) {
-      if (this.#firstOperand) {
+      if (this.#firstOperand === null) {
+        this.#firstOperand = parsedDisplay;
+      } else {
+        this.#secondOperand = parsedDisplay;
+
+        this.#firstOperand = operate(
+          this.#firstOperand,
+          this.#secondOperand,
+          this.#opStr,
+        );
+
+        this.#secondOperand = null;
+      }
+
+      this.#setOpStrAndUpdateMemoStr(char);
+      this.clearDisplay();
+    } catch (err) {
+      // TODO: Can this be cleaner?
+      this.#secondOperand = null;
+
+      if (this.#firstOperand !== null) {
         this.#setOpStrAndUpdateMemoStr(char);
       }
 
       this.clearDisplay();
-
-      throw RangeError("Entered an invalid number!");
-    } else {
-      // If the first operand is not set, set it, update the memo string, and
-      // clear the display to default.
-      if (!this.#firstOperand) {
-        this.#firstOperand = parsedDisplay;
-
-        this.#setOpStrAndUpdateMemoStr(char);
-
-        this.clearDisplay();
-      }
-      // If the second operand isn't set and the display contains a number,
-      // calculate the result of the operation and use that result as the
-      // first operand of a new operation.
-      else if (!this.#secondOperand) {
-        try {
-          this.#secondOperand = parsedDisplay;
-
-          this.#firstOperand = operate(
-            this.#firstOperand,
-            this.#secondOperand,
-            this.#opStr,
-          );
-
-          this.#secondOperand = null;
-
-          this.#setOpStrAndUpdateMemoStr(char);
-
-          this.clearDisplay();
-        } catch (err) {
-          this.#secondOperand = null;
-
-          this.#setOpStrAndUpdateMemoStr(char);
-
-          this.clearDisplay();
-
-          throw err;
-        }
-      }
-      // Otherwise, update the operator using the current first operand.
-      else {
-        this.#setOpStrAndUpdateMemoStr(char);
-      }
+      throw err;
     }
   }
 
   static equals() {
-    const parsedDisplay = Number.parseFloat(this.#displayStr);
-
-    if (isNaN(parsedDisplay)) {
-      this.clearDisplay();
-
-      throw RangeError("Entered an invalid number!");
-    } else {
-      // Cannot evaluate an operation without the first operand.
-      if (!this.#firstOperand) {
+    try {
+      if (this.#firstOperand === null) {
         return;
-      } else {
-        try {
-          this.#secondOperand = parsedDisplay;
-
-          let result = operate(
-            this.#firstOperand,
-            this.#secondOperand,
-            this.#opStr,
-          );
-
-          this.#firstOperand = result;
-          this.#reset(result.toString());
-        } catch (err) {
-          this.allClear();
-          throw err;
-        }
       }
+
+      const parsedDisplay = this.#parseDisplay();
+
+      this.#secondOperand = parsedDisplay;
+
+      let result = operate(
+        this.#firstOperand,
+        this.#secondOperand,
+        this.#opStr,
+      );
+
+      this.#firstOperand = result;
+
+      this.#reset(result.toString());
+    } catch (err) {
+      if (err instanceof DivByZeroError) {
+        this.clearDisplay();
+      }
+
+      if (err instanceof RangeError) {
+        this.allClear();
+      }
+
+      throw err;
     }
   }
 
   static allClear() {
     this.#reset();
+  }
+
+  static #parseDisplay() {
+    const parsedDisplay = Number.parseFloat(this.#displayStr);
+
+    if (isNaN(parsedDisplay)) {
+      throw new DisplayParseError(
+        "Entered an invalid number!",
+        this.#displayStr,
+      );
+    } else {
+      return parsedDisplay;
+    }
   }
 
   static #setOpStrAndUpdateMemoStr(char) {

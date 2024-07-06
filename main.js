@@ -1,5 +1,6 @@
 import { trySetThemeFromLocalStorage, toggleTheme } from "./scripts/themes.js";
 import { Calculator as Calc } from "./scripts/calculator.js";
+import { DivByZeroError, DisplayParseError } from "./scripts/errors.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   updateDisplay();
@@ -8,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const calculator = document.querySelector("#calculator");
 calculator.addEventListener("click", (event) => {
+  // TODO: Can this be tightened up?
   try {
     const target = event.target;
 
@@ -29,7 +31,6 @@ calculator.addEventListener("click", (event) => {
           Calc.negateDisplay();
           break;
         default:
-          // All buttons without a specific `id` push to the display.
           Calc.pushDisplay(target.textContent);
           break;
       }
@@ -49,34 +50,40 @@ calculator.addEventListener("click", (event) => {
 
     updateDisplay();
   } catch (err) {
-    if (err instanceof RangeError) {
+    if (err instanceof DisplayParseError) {
       if (document.hasFocus()) {
         document.activeElement.blur();
       }
 
-      switch (Calc.opStr) {
-        case "+":
-          document.querySelector("#add-btn").focus();
-          break;
-        case "-":
-          document.querySelector("#sub-btn");
-          break;
-        case "*":
-          document.querySelector("#mul-btn");
-          break;
-        case "/":
-          document.querySelector("#div-btn");
-          break;
-        default:
-          break;
-      }
-    } else {
+      focusOperatorBtn(Calc.opStr);
+    }
+
+    if (err instanceof DivByZeroError) {
       showErrorDialogWithText(err.message);
     }
 
     updateDisplay();
   }
 });
+
+function focusOperatorBtn(char) {
+  switch (char) {
+    case "+":
+      document.querySelector("#add-btn").focus();
+      break;
+    case "-":
+      document.querySelector("#sub-btn").focus();
+      break;
+    case "*":
+      document.querySelector("#mul-btn").focus();
+      break;
+    case "/":
+      document.querySelector("#div-btn").focus();
+      break;
+    default:
+      break;
+  }
+}
 
 const errDialog = document.querySelector("dialog");
 const errDialogOkBtn = document.querySelector("button.close");

@@ -1,3 +1,5 @@
+import { DivByZeroError } from "./errors.js";
+
 export function operate(num1, num2, op) {
   let result = null;
 
@@ -33,7 +35,7 @@ const multiply = (num1, num2) => {
 
 const divide = (num1, num2) => {
   if (num2 === 0 || isNaN(num2)) {
-    throw new Error("Cannot divide by zero!");
+    throw new DivByZeroError("Cannot divide by zero!");
   }
 
   return num1 / num2;
