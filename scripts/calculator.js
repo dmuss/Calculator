@@ -158,39 +158,70 @@ export class Calculator {
   }
 
   static #reset(newDisplayStr = DEFAULT_DISPLAY_STR) {
-    if (newDisplayStr.length <= MAX_DISPLAY_DIGITS) {
-      this.#displayStr = newDisplayStr;
-    } else {
-      this.#displayStr = this.#fitToDisplay(newDisplayStr);
-    }
-
+    this.#displayStr = this.#fitToDisplay(newDisplayStr);
     this.#memoStr = "";
-
     this.#firstOperand = null;
     this.#secondOperand = null;
     this.#opStr = null;
   }
 
   static #fitToDisplay(newDisplayStr) {
-    newDisplayStr = parseFloat(newDisplayStr).toExponential().toString();
-
+    // NOTE: This likely fails to catch all potential edge cases, but should
+    // work fine for the purposes of this assignment.
     if (newDisplayStr.length <= MAX_DISPLAY_DIGITS) {
       return newDisplayStr;
-    } else {
-      const splitIdx = newDisplayStr.indexOf("e");
-      const significandStr = newDisplayStr.substring(0, splitIdx);
-      const expStr = newDisplayStr.substring(splitIdx);
-
-      let maxDecimalPlaces =
-        MAX_DISPLAY_DIGITS -
-        expStr.length -
-        (significandStr.indexOf(".") + 1) -
-        1;
-
-      newDisplayStr =
-        parseFloat(significandStr).toFixed(maxDecimalPlaces) + expStr;
-
-      return newDisplayStr;
     }
+
+    // If the current display string is already in E notation, fit it to
+    // the display.
+    if (newDisplayStr.includes("e")) {
+      return this.#fitENotationStrToDisplay(newDisplayStr);
+    }
+
+    // If the display string does not contain a decimal, we have an integer
+    // that is too large.
+    if (!newDisplayStr.includes(".")) {
+      return this.#convertToENotationStrAndFitToDisplay(newDisplayStr);
+    }
+
+    // Otherwise, we have a string representing a value with a decimal
+    // place that is too long to fit in the display.
+    const decimalIdx = newDisplayStr.indexOf(".");
+
+    if (decimalIdx > MAX_DISPLAY_DIGITS) {
+      // The integer portion of the value represented is too large to fit
+      // in the display.
+      let roundedStr = Math.round(parseFloat(newDisplayStr)).toString();
+      return this.#convertToENotationStrAndFitToDisplay(roundedStr);
+    } else {
+      // The integer portion of the represented value will fit on the display,
+      // round to number of decimal places that fill fit.
+      const maxDecimalPlaces = MAX_DISPLAY_DIGITS - (decimalIdx + 1);
+      return parseFloat(newDisplayStr).toFixed(maxDecimalPlaces);
+    }
+  }
+
+  static #convertToENotationStrAndFitToDisplay(str) {
+    let result = parseFloat(str).toExponential().toString();
+
+    if (result.length <= MAX_DISPLAY_DIGITS) {
+      return result;
+    } else {
+      return this.#fitENotationStrToDisplay(result);
+    }
+  }
+
+  static #fitENotationStrToDisplay(str) {
+    const splitIdx = str.indexOf("e");
+    const significandStr = str.substring(0, splitIdx);
+    const expStr = str.substring(splitIdx);
+
+    let maxDecimalPlaces =
+      MAX_DISPLAY_DIGITS -
+      expStr.length -
+      (significandStr.indexOf(".") + 1) -
+      1;
+
+    return parseFloat(significandStr).toFixed(maxDecimalPlaces) + expStr;
   }
 }
