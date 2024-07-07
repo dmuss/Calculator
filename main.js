@@ -132,8 +132,8 @@ calc.addEventListener("click", (event) => {
 
     const targetClasses = target.className;
 
-    if (targetClasses.includes("operand")) {
-      onOperandClick(target);
+    if (targetClasses.includes("input-btn")) {
+      onInputButton(target);
     }
 
     // TODO: just use op-btn class?
@@ -160,7 +160,7 @@ calc.addEventListener("click", (event) => {
   }
 });
 
-function onOperandClick(target) {
+function onInputButton(target) {
   switch (target.id) {
     case "clear-btn":
       Calc.clearDisplay();
