@@ -38,7 +38,7 @@ export class Calculator {
     this.#displayStr = DEFAULT_DISPLAY_STR;
   }
 
-  static negateDisplay() {
+  static changeSign() {
     if (this.#displayStr.startsWith("-")) {
       this.#displayStr = this.#displayStr.substring(1);
     } else {

@@ -36,8 +36,8 @@ const keyMap = {
   9: "#nine-btn",
   t: "#theme-btn",
   T: "#theme-btn",
-  s: "#negate-btn",
-  S: "#negate-btn",
+  s: "#sign-btn",
+  S: "#sign-btn",
 };
 
 let keyDown = false;
@@ -107,7 +107,7 @@ document.addEventListener("keyup", (event) => {
   }
 
   if (key === "s" || key === "S") {
-    Calc.negateDisplay();
+    Calc.flipSign();
   }
 
   updateCalcDisplay();
@@ -168,8 +168,8 @@ function onOperandClick(target) {
     case "back-btn":
       Calc.backspace();
       break;
-    case "negate-btn":
-      Calc.negateDisplay();
+    case "sign-btn":
+      Calc.flipSign();
       break;
     default:
       Calc.pushDisplay(target.textContent);
