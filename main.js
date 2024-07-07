@@ -41,8 +41,12 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => {
   const key = event.key;
 
-  if ((key >= "0" && key <= "9") || key == ".") {
+  if (key >= "0" && key <= "9") {
     Calc.pushDisplay(event.key);
+  }
+
+  if (key === "." || key === ",") {
+    Calc.pushDisplay(".");
   }
 
   if (["+", "-", "*", "/"].includes(key)) {
@@ -65,6 +69,7 @@ document.addEventListener("keyup", (event) => {
 
   if (key === "Escape") {
     Calc.allClear();
+    clearFocus();
   }
 
   if (key === "t" || key === "T") {
