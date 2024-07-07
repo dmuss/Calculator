@@ -69,6 +69,7 @@ document.addEventListener("keyup", (event) => {
 
   if (key === "t" || key === "T") {
     toggleTheme();
+    focusOperatorBtn(Calc.opStr);
   }
 
   updateCalcDisplay();
@@ -84,6 +85,7 @@ calc.addEventListener("click", (event) => {
 
     if (target.id === "theme-btn") {
       toggleTheme();
+      focusOperatorBtn(Calc.opStr);
     }
 
     const targetClasses = target.className;
