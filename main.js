@@ -59,30 +59,34 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  keyDown = false;
-  const key = event.key;
+  try {
+    keyDown = false;
+    const key = event.key;
 
-  Calc.processKeyboardInput(key);
+    Calc.processKeyboardInput(key);
 
-  const elem = document.querySelector(keyMap[key]);
-  if (elem) {
-    elem.className = elem.className.replace(" active", "");
+    const elem = document.querySelector(keyMap[key]);
+    if (elem) {
+      elem.className = elem.className.replace(" active", "");
+    }
+
+    if (["=", "Enter", "Escape"].includes(key)) {
+      clearFocus();
+    }
+
+    if (["+", "-", "*", "/"].includes(key)) {
+      focusOperatorBtn(key);
+    }
+
+    if (key === "t" || key === "T") {
+      toggleTheme();
+      focusOperatorBtn(Calc.opStr);
+    }
+  } catch (err) {
+    handleCalculatorException(err);
+  } finally {
+    updateCalcDisplay();
   }
-
-  if (["=", "Enter", "Escape"].includes(key)) {
-    clearFocus();
-  }
-
-  if (["+", "-", "*", "/"].includes(key)) {
-    focusOperatorBtn(key);
-  }
-
-  if (key === "t" || key === "T") {
-    toggleTheme();
-    focusOperatorBtn(Calc.opStr);
-  }
-
-  updateCalcDisplay();
 });
 
 /**************
@@ -111,18 +115,22 @@ calc.addEventListener("click", (event) => {
       onInputButton(target);
     }
   } catch (err) {
-    if (err instanceof DisplayParseError) {
-      clearFocus();
-      focusOperatorBtn(Calc.opStr);
-    }
-
-    if (err instanceof DivByZeroError) {
-      showErrorModalWithText(err.message);
-    }
+    handleCalculatorException(err);
   } finally {
     updateCalcDisplay();
   }
 });
+
+function handleCalculatorException(err) {
+  if (err instanceof DisplayParseError) {
+    clearFocus();
+    focusOperatorBtn(Calc.opStr);
+  }
+
+  if (err instanceof DivByZeroError) {
+    showErrorModalWithText(err.message);
+  }
+}
 
 function onInputButton(target) {
   switch (target.id) {
