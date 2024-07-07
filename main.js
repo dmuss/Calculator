@@ -126,6 +126,10 @@ calc.addEventListener("click", (event) => {
       focusOperatorBtn(Calc.opStr);
     }
 
+    if (targetClasses.id === "equals-btn") {
+      Calc.equals();
+    }
+
     const targetClasses = target.className;
 
     if (targetClasses.includes("operand")) {
@@ -139,10 +143,6 @@ calc.addEventListener("click", (event) => {
 
     if (targetClasses.includes("all-clear")) {
       Calc.allClear();
-    }
-
-    if (targetClasses.includes("equals")) {
-      Calc.equals();
     }
 
     updateCalcDisplay();

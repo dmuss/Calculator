@@ -199,13 +199,13 @@ button:active {
 }
 
 .op-btn,
-.equals {
+#equals-btn {
   color: var(--op-btn-font-color);
   background-color: var(--op-btn-bg);
 }
 
 .op-btn:hover,
-.equals:hover {
+#equals-btn:hover {
   background-color: var(--op-btn-hover);
 }
 
