@@ -23,26 +23,29 @@
         </div>
 
         <div id="buttons-container">
-          <button type="button" class="operand clear-btn" id="back-btn">&#x232b</button>
-          <button type="button" class="operand clear-btn" id="clear-btn">C</button>
-          <button type="button" class="all-clear clear-btn">AC</button>
-          <button type="button" class="operator op-btn" id="div-btn">/</button>
-          <button type="button" class="operand">7</button>
-          <button type="button" class="operand">8</button>
-          <button type="button" class="operand">9</button>
-          <button type="button" class="operator op-btn" id="mul-btn">*</button>
-          <button type="button" class="operand">4</button>
-          <button type="button" class="operand">5</button>
-          <button type="button" class="operand">6</button>
-          <button type="button" class="operator op-btn" id="sub-btn">-</button>
-          <button type="button" class="operand">1</button>
-          <button type="button" class="operand">2</button>
-          <button type="button" class="operand">3</button>
-          <button type="button" class="operator op-btn" id="add-btn">+</button>
-          <button type="button" class="operand">0</button>
-          <button type="button" class="operand" id="decimal-btn">.</button>
-          <button type="button" class="operand" id="negate-btn">+/-</button>
-          <button type="button" class="equals">=</button>
+          <button type="button" id="back-btn" class="operand clear-btn">&#x232b</button>
+          <button type="button" id="clear-btn" class="operand clear-btn">C</button>
+          <button type="button" id="all-clear-btn" class="clear-btn">AC</button>
+          <button type="button" id="div-btn" class="operator op-btn">/</button>
+          <!-- TODO: .operand buttons should probably be named for current input? -->
+          <button type="button" id="seven-btn" class="operand">7</button>
+          <button type="button" id="eight-btn" class="operand">8</button>
+          <button type="button" id="nine-btn" class="operand">9</button>
+          <button type="button" id="mul-btn" class="operator op-btn">*</button>
+          <button type="button" id="four-btn" class="operand">4</button>
+          <button type="button" id="five-btn" class="operand">5</button>
+          <button type="button" id="six-btn" class="operand">6</button>
+          <button type="button" id="sub-btn" class="operator op-btn">-</button>
+          <button type="button" id="one-btn" class="operand">1</button>
+          <button type="button" id="two-btn" class="operand">2</button>
+          <button type="button" id="three-btn" class="operand">3</button>
+          <button type="button" id="add-btn" class="operator op-btn">+</button>
+          <button type="button" id="zero-btn" class="operand">0</button>
+          <button type="button" id="decimal-btn" class="operand">.</button>
+          <!-- TODO: negate renamed change-sign or sign -->
+          <button type="button" id="negate-btn" class="operand">+/-</button>
+          <!-- TODO: does this need a class? -->
+          <button type="button" id="equals-btn" class="equals">=</button>
         </div>
       </div>
     </main>

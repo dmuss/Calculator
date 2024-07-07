@@ -13,33 +13,62 @@ document.addEventListener("DOMContentLoaded", () => {
 /********************
  * KEYBOARD SUPPORT *
  ********************/
-function downKeyIsCalcKey(key) {
-  return (
-    (key >= "0" && key <= "9") ||
-    [
-      ".",
-      "+",
-      "-",
-      "*",
-      "/",
-      "=",
-      "Backspace",
-      "Delete",
-      "Escape",
-      "Enter",
-    ].includes(key)
-  );
-}
+const keyMap = {
+  Backspace: "#back-btn",
+  Delete: "#clear-btn",
+  Escape: "#all-clear-btn",
+  Enter: "#equals-btn",
+  "=": "#equals-btn",
+  ".": "#decimal-btn",
+  "+": "#add-btn",
+  "-": "#sub-btn",
+  "*": "#mul-btn",
+  "/": "#div-btn",
+  0: "#zero-btn",
+  1: "#one-btn",
+  2: "#two-btn",
+  3: "#three-btn",
+  4: "#four-btn",
+  5: "#five-btn",
+  6: "#six-btn",
+  7: "#seven-btn",
+  8: "#eight-btn",
+  9: "#nine-btn",
+  t: "#theme-btn",
+  T: "#theme-btn",
+  s: "#negate-btn",
+  S: "#negate-btn",
+};
+
+let keyDown = false;
+
+console.log(keyMap["sup"]);
 
 document.addEventListener("keydown", (event) => {
-  if (downKeyIsCalcKey(event.key)) {
-    event.preventDefault();
-    return false;
+  if (!keyDown) {
+    keyDown = true;
+    if (keyMap[event.key] !== undefined) {
+      event.preventDefault();
+
+      const pressedElem = document.querySelector(keyMap[event.key]);
+      if (pressedElem) {
+        pressedElem.className += " active";
+      }
+
+      return false;
+    }
   }
 });
 
 document.addEventListener("keyup", (event) => {
+  keyDown = false;
+
   const key = event.key;
+
+  let elem = document.querySelector(keyMap[key]);
+  if (elem) {
+    elem.className = elem.className.replace(" active", "");
+  }
 
   if (key >= "0" && key <= "9") {
     Calc.pushDisplay(event.key);
@@ -77,6 +106,10 @@ document.addEventListener("keyup", (event) => {
     focusOperatorBtn(Calc.opStr);
   }
 
+  if (key === "s" || key === "S") {
+    Calc.negateDisplay();
+  }
+
   updateCalcDisplay();
 });
 
@@ -99,6 +132,7 @@ calc.addEventListener("click", (event) => {
       onOperandClick(target);
     }
 
+    // TODO: just use op-btn class?
     if (targetClasses.includes("operator")) {
       Calc.setOperator(target.textContent);
     }
