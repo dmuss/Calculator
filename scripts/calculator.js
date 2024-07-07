@@ -54,14 +54,20 @@ export class Calculator {
       this.#displayStr.length >= MAX_DISPLAY_DIGITS
     ) {
       return;
-    } else {
-      this.#displayStr += char;
+    }
 
-      // Trim leading zeros on integers.
-      if (this.#displayStr.length > 1 && this.#displayStr.startsWith("0")) {
-        this.#displayStr = this.#displayStr.substring(1);
+    if (this.#displayStr === DEFAULT_DISPLAY_STR) {
+      if (char === "0") {
+        return;
+      }
+
+      if (char >= "1" && char <= "9") {
+        this.#displayStr = char;
+        return;
       }
     }
+
+    this.#displayStr += char;
   }
 
   static setOperator(char) {
