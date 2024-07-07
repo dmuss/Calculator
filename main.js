@@ -126,7 +126,7 @@ calc.addEventListener("click", (event) => {
       focusOperatorBtn(Calc.opStr);
     }
 
-    if (targetClasses.id === "equals-btn") {
+    if (target.id === "equals-btn") {
       Calc.equals();
     }
 
