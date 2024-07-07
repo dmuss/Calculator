@@ -23,6 +23,44 @@ export class Calculator {
     return this.#opStr;
   }
 
+  static processKeyboardInput(key) {
+    if (key >= "0" && key <= "9") {
+      this.pushDisplay(key);
+    }
+
+    if (key === "." || key === ",") {
+      this.pushDisplay(".");
+    }
+
+    if (["+", "-", "*", "/"].includes(key)) {
+      this.setOperator(key);
+    }
+
+    if (["=", "Enter"].includes(key)) {
+      this.equals();
+    }
+
+    if (key === "Backspace") {
+      this.backspace();
+    }
+
+    if (key === "Delete") {
+      this.clearDisplay();
+    }
+
+    if (key === "Escape") {
+      this.allClear();
+    }
+
+    if (key === "s" || key === "S") {
+      this.changeSign();
+    }
+  }
+
+  static pressed(key) {
+    this.processKeyboardInput(key);
+  }
+
   static backspace() {
     if (this.#displayStr.length <= 1) {
       this.clearDisplay();

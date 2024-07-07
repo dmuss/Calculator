@@ -6,8 +6,8 @@ import { Calculator as Calc } from "./scripts/calculator.js";
 import { DivByZeroError, DisplayParseError } from "./scripts/errors.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateCalcDisplay();
   setThemeFromLocalStorageOrDefault();
+  updateCalcDisplay();
 });
 
 /********************
@@ -42,8 +42,6 @@ const keyMap = {
 
 let keyDown = false;
 
-console.log(keyMap["sup"]);
-
 document.addEventListener("keydown", (event) => {
   if (!keyDown) {
     keyDown = true;
@@ -62,52 +60,26 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("keyup", (event) => {
   keyDown = false;
-
   const key = event.key;
 
-  let elem = document.querySelector(keyMap[key]);
+  Calc.processKeyboardInput(key);
+
+  const elem = document.querySelector(keyMap[key]);
   if (elem) {
     elem.className = elem.className.replace(" active", "");
   }
 
-  if (key >= "0" && key <= "9") {
-    Calc.pushDisplay(event.key);
-  }
-
-  if (key === "." || key === ",") {
-    Calc.pushDisplay(".");
+  if (["=", "Enter", "Escape"].includes(key)) {
+    clearFocus();
   }
 
   if (["+", "-", "*", "/"].includes(key)) {
-    Calc.setOperator(key);
     focusOperatorBtn(key);
-  }
-
-  if (["=", "Enter"].includes(key)) {
-    Calc.equals();
-    clearFocus();
-  }
-
-  if (key === "Backspace") {
-    Calc.backspace();
-  }
-
-  if (key === "Delete") {
-    Calc.clearDisplay();
-  }
-
-  if (key === "Escape") {
-    Calc.allClear();
-    clearFocus();
   }
 
   if (key === "t" || key === "T") {
     toggleTheme();
     focusOperatorBtn(Calc.opStr);
-  }
-
-  if (key === "s" || key === "S") {
-    Calc.flipSign();
   }
 
   updateCalcDisplay();
@@ -120,31 +92,24 @@ const calc = document.querySelector("#calculator");
 calc.addEventListener("click", (event) => {
   try {
     const target = event.target;
+    const targetClasses = target.className;
+
+    if (target.id === "equals-btn") {
+      Calc.pressed("=");
+    }
+
+    if (targetClasses.includes("op-btn")) {
+      Calc.pressed(target.textContent);
+    }
 
     if (target.id === "theme-btn") {
       toggleTheme();
       focusOperatorBtn(Calc.opStr);
     }
 
-    if (target.id === "equals-btn") {
-      Calc.equals();
-    }
-
-    const targetClasses = target.className;
-
     if (targetClasses.includes("input-btn")) {
       onInputButton(target);
     }
-
-    if (targetClasses.includes("op-btn")) {
-      Calc.setOperator(target.textContent);
-    }
-
-    if (targetClasses.includes("all-clear")) {
-      Calc.allClear();
-    }
-
-    updateCalcDisplay();
   } catch (err) {
     if (err instanceof DisplayParseError) {
       clearFocus();
@@ -154,7 +119,7 @@ calc.addEventListener("click", (event) => {
     if (err instanceof DivByZeroError) {
       showErrorModalWithText(err.message);
     }
-
+  } finally {
     updateCalcDisplay();
   }
 });
@@ -162,16 +127,19 @@ calc.addEventListener("click", (event) => {
 function onInputButton(target) {
   switch (target.id) {
     case "clear-btn":
-      Calc.clearDisplay();
+      Calc.pressed("Delete");
+      break;
+    case "all-clear-btn":
+      Calc.pressed("Escape");
       break;
     case "back-btn":
-      Calc.backspace();
+      Calc.pressed("Backspace");
       break;
     case "sign-btn":
-      Calc.flipSign();
+      Calc.pressed("s");
       break;
     default:
-      Calc.pushDisplay(target.textContent);
+      Calc.pressed(target.textContent);
       break;
   }
 }
