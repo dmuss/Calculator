@@ -3,10 +3,6 @@
 
   --calc-bg: #1c1c1c;
 
-  --display-bg: hsl(135, 22%, 65%);
-  --display-font-color: hsl(0, 0%, 12%);
-
-  /* TODO: Active button needs more contrast */
   --op-btn-active: hsl(35, 100%, 35%);
   --op-btn-bg: hsl(35, 100%, 50%);
   --op-btn-hover: hsl(35, 100%, 60%);
@@ -25,9 +21,6 @@
   --body-bg: hsla(0, 0%, 85%, 1);
 
   --calc-bg: hsla(60, 8%, 90%, 1);
-
-  --display-bg: hsl(135, 22%, 65%);
-  --display-font-color: hsl(0, 0%, 12%);
 
   --op-btn-active: hsl(232, 20%, 55%);
   --op-btn-bg: hsl(232, 20%, 65%);
@@ -150,8 +143,8 @@ dialog::backdrop {
 }
 
 #display-container {
-  background-color: var(--display-bg);
-  color: var(--display-font-color);
+  background-color: hsl(135, 22%, 65%);
+  color: hsl(0, 0%, 12);
   grid-column: 1 / -1;
   padding: 1% 3%;
   box-shadow:
