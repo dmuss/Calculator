@@ -136,8 +136,7 @@ calc.addEventListener("click", (event) => {
       onInputButton(target);
     }
 
-    // TODO: just use op-btn class?
-    if (targetClasses.includes("operator")) {
+    if (targetClasses.includes("op-btn")) {
       Calc.setOperator(target.textContent);
     }
 
