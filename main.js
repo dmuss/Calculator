@@ -89,7 +89,7 @@ calc.addEventListener("click", (event) => {
     const targetClasses = target.className;
 
     if (targetClasses.includes("operand")) {
-      onOperandClick(target.id);
+      onOperandClick(target);
     }
 
     if (targetClasses.includes("operator")) {
@@ -119,8 +119,8 @@ calc.addEventListener("click", (event) => {
   }
 });
 
-function onOperandClick(id) {
-  switch (id) {
+function onOperandClick(target) {
+  switch (target.id) {
     case "clear-btn":
       Calc.clearDisplay();
       break;
