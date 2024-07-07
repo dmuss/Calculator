@@ -1,37 +1,46 @@
 :root {
-  --body-bg: #eaeaea;
+  --body-bg: hsla(0, 0%, 0%, 0.85);
+
   --calc-bg: #1c1c1c;
+
   --display-bg: hsl(135, 22%, 65%);
-  --display-font-color: black;
+  --display-font-color: hsl(0, 0%, 12%);
+
   /* TODO: Active button needs more contrast */
   --op-btn-active: hsl(35, 100%, 35%);
   --op-btn-bg: hsl(35, 100%, 50%);
   --op-btn-hover: hsl(35, 100%, 60%);
   --op-btn-font-color: white;
+
   --clear-btn-bg: hsl(60, 2%, 60%);
   --clear-btn-hover: hsl(60, 2%, 70%);
   --clear-btn-font-color: black;
+
   --num-btn-bg: hsl(0, 0%, 30%);
   --num-btn-hover: hsl(0, 0%, 40%);
   --num-btn-font-color: white;
 }
 
-/* TODO: Redo light theme. */
 [data-theme="light"] {
-  --body-bg: #333333;
-  --calc-bg: #eaeaea;
-  --display-bg: hsl(135, 22%, 25%);
-  --display-font-color: lightgrey;
-  --op-btn-hover: hsl(35, 100%, 20%);
-  --op-btn-bg: hsl(35, 100%, 30%);
-  --op-btn-active: hsl(35, 100%, 40%);
-  --op-btn-font-color: lightgrey;
-  --clear-btn-bg: grey;
-  --clear-btn-hover: #b0b0b0;
-  --clear-btn-font-color: lightgrey;
-  --num-btn-hover: #222222;
-  --num-btn-bg: #333333;
-  --num-btn-font-color: lightgrey;
+  --body-bg: hsla(0, 0%, 85%, 1);
+
+  --calc-bg: hsla(60, 8%, 90%, 1);
+
+  --display-bg: hsl(135, 22%, 65%);
+  --display-font-color: hsl(0, 0%, 12%);
+
+  --op-btn-active: hsl(232, 20%, 55%);
+  --op-btn-bg: hsl(232, 20%, 65%);
+  --op-btn-hover: hsl(232, 20%, 70%);
+  --op-btn-font-color: white;
+
+  --clear-btn-bg: hsl(32, 10%, 80%);
+  --clear-btn-hover: hsl(32, 10%, 75%);
+  --clear-btn-font-color: var(--num-btn-font-color);
+
+  --num-btn-bg: hsl(45, 11%, 85%);
+  --num-btn-hover: hsl(45, 11%, 80%);
+  --num-btn-font-color: hsl(219, 25%, 23%);
 }
 
 *,
@@ -128,7 +137,7 @@ dialog::backdrop {
 
 #calc-name {
   grid-column: 1 / 4;
-  color: var(--num-btn-bg);
+  color: var(--num-btn-font-color);
   font-size: 1.33rem;
   text-align: left;
 }
