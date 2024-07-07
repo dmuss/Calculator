@@ -65,11 +65,6 @@ document.addEventListener("keyup", (event) => {
 
     Calc.processKeyboardInput(key);
 
-    const elem = document.querySelector(keyMap[key]);
-    if (elem) {
-      elem.className = elem.className.replace(" active", "");
-    }
-
     if (["=", "Enter", "Escape"].includes(key)) {
       clearFocus();
     }
@@ -85,6 +80,11 @@ document.addEventListener("keyup", (event) => {
   } catch (err) {
     handleCalculatorException(err);
   } finally {
+    const elem = document.querySelector(keyMap[event.key]);
+    if (elem) {
+      elem.className = elem.className.replace(" active", "");
+    }
+
     updateCalcDisplay();
   }
 });
