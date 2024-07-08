@@ -192,12 +192,13 @@ function updateCalcDisplay() {
  * ERROR MODAL *
  ***************/
 const errDialog = document.querySelector("dialog");
-const errDialogOkBtn = document.querySelector("button.close");
+const errDialogOkBtn = document.querySelector("#close-error-btn");
 errDialogOkBtn.addEventListener("click", () => {
   errDialog.close();
 });
 
 function showErrorModalWithText(text) {
-  errDialog.firstElementChild.innerText = text;
+  const errDialogText = document.querySelector("dialog>p");
+  errDialogText.innerText = text;
   errDialog.showModal();
 }
