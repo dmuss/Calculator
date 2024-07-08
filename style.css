@@ -3,10 +3,11 @@
 
   --calc-bg: #1c1c1c;
 
-  --op-btn-active: hsl(35, 100%, 35%);
+  --op-btn-active: hsl(35, 100%, 80%);
   --op-btn-bg: hsl(35, 100%, 50%);
-  --op-btn-hover: hsl(35, 100%, 60%);
+  --op-btn-hover: hsl(35, 100%, 35%);
   --op-btn-font-color: white;
+  --op-btn-active-font-color: var(--op-btn-hover);
 
   --clear-btn-bg: hsl(60, 2%, 60%);
   --clear-btn-hover: hsl(60, 2%, 70%);
@@ -22,9 +23,9 @@
 
   --calc-bg: hsla(60, 8%, 90%, 1);
 
-  --op-btn-active: hsl(232, 20%, 55%);
+  --op-btn-active: hsl(232, 20%, 80%);
   --op-btn-bg: hsl(232, 20%, 65%);
-  --op-btn-hover: hsl(232, 20%, 70%);
+  --op-btn-hover: hsl(232, 20%, 55%);
   --op-btn-font-color: white;
 
   --clear-btn-bg: hsl(32, 10%, 80%);
@@ -221,6 +222,7 @@ button:active {
 }
 
 .op-btn:focus {
+  color: var(--op-btn-active-font-color);
   background-color: var(--op-btn-active);
 }
 
