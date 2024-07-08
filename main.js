@@ -48,7 +48,7 @@ document.addEventListener("keydown", (event) => {
       const downKey = event.key;
       const pressedElem = document.querySelector(keyMap[downKey]);
       if (pressedElem) {
-        toggleClassOnElement(pressedElem, "active");
+        pressedElem.classList.add("active");
 
         try {
           Calc.processKeyboardInput(downKey);
@@ -79,7 +79,9 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("keyup", (event) => {
   const upElement = document.querySelector(keyMap[event.key]);
-  toggleClassOnElement(upElement, "active");
+  if (upElement) {
+    upElement.classList.remove("active");
+  }
 });
 
 /**************
@@ -153,7 +155,7 @@ function clearOperatorButtonHighlight() {
   );
 
   if (currentlyHighlightedButton) {
-    toggleClassOnElement(currentlyHighlightedButton, "highlight");
+    currentlyHighlightedButton.classList.remove("highlight");
   }
 }
 
@@ -179,19 +181,7 @@ function highlightOperatorButton(char) {
   }
 
   if (operatorButton) {
-    toggleClassOnElement(operatorButton, "highlight");
-  }
-}
-
-function toggleClassOnElement(element, className) {
-  if (element) {
-    const classNameToToggle = " " + className;
-
-    if (element.className.includes(classNameToToggle)) {
-      element.className = element.className.replace(classNameToToggle, "");
-    } else {
-      element.className += classNameToToggle;
-    }
+    operatorButton.classList.add("highlight");
   }
 }
 
