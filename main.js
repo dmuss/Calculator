@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /********************
  * KEYBOARD SUPPORT *
  ********************/
+// TODO: new Map()
 const keyMap = {
   Backspace: "#back-btn",
   Delete: "#clear-btn",
@@ -40,12 +41,17 @@ const keyMap = {
   S: "#sign-btn",
 };
 
+let downKeys = new Map();
+
 document.addEventListener("keydown", (event) => {
-  if (!errDialog.open) {
+  if (!errDialog.open && !downKeys.has(event.key)) {
     if (keyMap[event.key] !== undefined) {
+      downKeys.set(event.key, true);
+
       event.preventDefault();
 
       const downKey = event.key;
+
       const pressedElem = document.querySelector(keyMap[downKey]);
       if (pressedElem) {
         pressedElem.classList.add("active");
@@ -78,7 +84,9 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  const upElement = document.querySelector(keyMap[event.key]);
+  downKeys.delete(event.key);
+
+  const upElement = document.querySelector('button[class~="active"]');
   if (upElement) {
     upElement.classList.remove("active");
   }
