@@ -177,11 +177,11 @@ function focusOperatorBtn(char) {
 /**********************
  * CALCULATOR DISPLAY *
  **********************/
-const calcDisplayElem = document.querySelector("#display");
+const calcDisplayTextElem = document.querySelector("#display-text");
 const calcMemoElem = document.querySelector("#display-memo");
 
 function updateCalcDisplay() {
-  calcDisplayElem.textContent = Calc.displayStr;
+  calcDisplayTextElem.textContent = Calc.displayStr;
   calcMemoElem.textContent = Calc.memoStr;
 }
 

@@ -1,0 +1,24 @@
+dialog {
+  background-color: var(--calc-bg);
+  color: var(--num-btn-font-color);
+  min-width: 300px;
+  margin: auto auto;
+  border-color: var(--num-btn-font-color);
+  border-radius: 10px;
+}
+
+dialog::backdrop {
+  background-color: rgba(20, 20, 20, 0.66);
+}
+
+dialog > button {
+  width: 140px;
+  margin-top: 10px;
+  box-shadow: none;
+  background-color: var(--op-btn-bg);
+  color: var(--op-btn-font-color);
+}
+
+dialog > button:hover {
+  background-color: var(--op-btn-hover);
+}
