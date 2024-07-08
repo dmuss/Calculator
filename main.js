@@ -136,6 +136,7 @@ function onInputButton(target) {
       break;
     case "all-clear-btn":
       Calc.pressed("Escape");
+      clearOperatorButtonHighlight();
       break;
     case "back-btn":
       Calc.pressed("Backspace");
