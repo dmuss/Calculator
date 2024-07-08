@@ -1,6 +1,9 @@
 /* Based on Josh Comeau's CSS Reset:
  *  https://www.joshwcomeau.com/css/custom-css-reset/ 
 */
+:root {
+  font-size: 16px;
+}
 
 *,
 *::before,
