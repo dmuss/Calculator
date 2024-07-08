@@ -48,42 +48,38 @@ document.addEventListener("keydown", (event) => {
       const downKey = event.key;
       const pressedElem = document.querySelector(keyMap[downKey]);
       if (pressedElem) {
-        if (!pressedElem.className.includes("active")) {
-          pressedElem.className += " active";
+        toggleClassOnElement(pressedElem, "active");
 
-          try {
-            Calc.processKeyboardInput(downKey);
+        try {
+          Calc.processKeyboardInput(downKey);
 
-            if (["=", "Enter", "Escape"].includes(downKey)) {
-              clearFocus();
-            }
-
-            if (["+", "-", "*", "/"].includes(downKey)) {
-              focusOperatorBtn(downKey);
-            }
-
-            if (downKey === "t" || downKey === "T") {
-              toggleTheme();
-              focusOperatorBtn(Calc.opStr);
-            }
-          } catch (err) {
-            handleCalculatorException(err);
-          } finally {
-            updateCalcDisplay();
+          if (["=", "Enter", "Escape"].includes(downKey)) {
+            clearOperatorButtonHighlight();
           }
+
+          if (["+", "-", "*", "/"].includes(downKey)) {
+            highlightOperatorButton(downKey);
+          }
+
+          if (downKey === "t" || downKey === "T") {
+            toggleTheme();
+            highlightOperatorButton(Calc.opStr);
+          }
+        } catch (err) {
+          handleCalculatorException(err);
+        } finally {
+          updateCalcDisplay();
         }
       }
-
-      return false;
     }
+
+    return false;
   }
 });
 
 document.addEventListener("keyup", (event) => {
-  const elem = document.querySelector(keyMap[event.key]);
-  if (elem) {
-    elem.className = elem.className.replace(" active", "");
-  }
+  const upElement = document.querySelector(keyMap[event.key]);
+  toggleClassOnElement(upElement, "active");
 });
 
 /**************
@@ -97,15 +93,17 @@ calc.addEventListener("click", (event) => {
 
     if (target.id === "equals-btn") {
       Calc.pressed("=");
+      clearOperatorButtonHighlight();
     }
 
     if (targetClasses.includes("op-btn")) {
       Calc.pressed(target.textContent);
+      highlightOperatorButton(Calc.opStr);
     }
 
     if (target.id === "theme-btn") {
       toggleTheme();
-      focusOperatorBtn(Calc.opStr);
+      highlightOperatorButton(Calc.opStr);
     }
 
     if (targetClasses.includes("input-btn")) {
@@ -120,8 +118,8 @@ calc.addEventListener("click", (event) => {
 
 function handleCalculatorException(err) {
   if (err instanceof DisplayParseError) {
-    clearFocus();
-    focusOperatorBtn(Calc.opStr);
+    clearOperatorButtonHighlight();
+    highlightOperatorButton(Calc.opStr);
   }
 
   if (err instanceof DivByZeroError) {
@@ -149,28 +147,51 @@ function onInputButton(target) {
   }
 }
 
-function clearFocus() {
-  if (document.hasFocus()) {
-    document.activeElement.blur();
+function clearOperatorButtonHighlight() {
+  let currentlyHighlightedButton = document.querySelector(
+    '.op-btn[class~="highlight"]',
+  );
+
+  if (currentlyHighlightedButton) {
+    toggleClassOnElement(currentlyHighlightedButton, "highlight");
   }
 }
 
-function focusOperatorBtn(char) {
+function highlightOperatorButton(char) {
+  clearOperatorButtonHighlight();
+
+  let operatorButton = null;
   switch (char) {
     case "+":
-      document.querySelector("#add-btn").focus();
+      operatorButton = document.querySelector("#add-btn");
       break;
     case "-":
-      document.querySelector("#sub-btn").focus();
+      operatorButton = document.querySelector("#sub-btn");
       break;
     case "*":
-      document.querySelector("#mul-btn").focus();
+      operatorButton = document.querySelector("#mul-btn");
       break;
     case "/":
-      document.querySelector("#div-btn").focus();
+      operatorButton = document.querySelector("#div-btn");
       break;
     default:
       break;
+  }
+
+  if (operatorButton) {
+    toggleClassOnElement(operatorButton, "highlight");
+  }
+}
+
+function toggleClassOnElement(element, className) {
+  if (element) {
+    const classNameToToggle = " " + className;
+
+    if (element.className.includes(classNameToToggle)) {
+      element.className = element.className.replace(classNameToToggle, "");
+    } else {
+      element.className += classNameToToggle;
+    }
   }
 }
 

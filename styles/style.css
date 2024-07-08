@@ -133,7 +133,7 @@ button:active {
   background-color: var(--op-btn-hover);
 }
 
-.op-btn:focus {
+.op-btn.highlight {
   background-color: var(--op-btn-active);
   color: var(--op-btn-active-font-color);
 }
