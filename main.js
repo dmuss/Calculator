@@ -40,17 +40,38 @@ const keyMap = {
   S: "#sign-btn",
 };
 
-let keyDown = false;
-
 document.addEventListener("keydown", (event) => {
-  if (!keyDown) {
-    keyDown = true;
+  if (!errDialog.open) {
     if (keyMap[event.key] !== undefined) {
       event.preventDefault();
 
-      const pressedElem = document.querySelector(keyMap[event.key]);
+      const downKey = event.key;
+      const pressedElem = document.querySelector(keyMap[downKey]);
       if (pressedElem) {
-        pressedElem.className += " active";
+        if (!pressedElem.className.includes("active")) {
+          pressedElem.className += " active";
+
+          try {
+            Calc.processKeyboardInput(downKey);
+
+            if (["=", "Enter", "Escape"].includes(downKey)) {
+              clearFocus();
+            }
+
+            if (["+", "-", "*", "/"].includes(downKey)) {
+              focusOperatorBtn(downKey);
+            }
+
+            if (downKey === "t" || downKey === "T") {
+              toggleTheme();
+              focusOperatorBtn(Calc.opStr);
+            }
+          } catch (err) {
+            handleCalculatorException(err);
+          } finally {
+            updateCalcDisplay();
+          }
+        }
       }
 
       return false;
@@ -59,33 +80,9 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  try {
-    keyDown = false;
-    const key = event.key;
-
-    Calc.processKeyboardInput(key);
-
-    if (["=", "Enter", "Escape"].includes(key)) {
-      clearFocus();
-    }
-
-    if (["+", "-", "*", "/"].includes(key)) {
-      focusOperatorBtn(key);
-    }
-
-    if (key === "t" || key === "T") {
-      toggleTheme();
-      focusOperatorBtn(Calc.opStr);
-    }
-  } catch (err) {
-    handleCalculatorException(err);
-  } finally {
-    const elem = document.querySelector(keyMap[event.key]);
-    if (elem) {
-      elem.className = elem.className.replace(" active", "");
-    }
-
-    updateCalcDisplay();
+  const elem = document.querySelector(keyMap[event.key]);
+  if (elem) {
+    elem.className = elem.className.replace(" active", "");
   }
 });
 
