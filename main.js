@@ -12,70 +12,86 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /********************
  * KEYBOARD SUPPORT *
+ NOTE: The current keyboard input handling will not properly display
+ "pressed" and "unpressed" buttons on the page where there are multiple
+ hotkeys for that button (e.g., if you press and hold `.`, then press and
+ release `,` while still holding `.`, the page will render the decimal
+ button "unpressed" as it handled a `keyup` event for one of the hotkeys.
+ ----------------------------------------------------------------------------
+ In practice, this really shouldn't be much of an issue as only the equals
+ and decimal buttons share a hotkey, and:
+  - the equals button is unlikely to be held and resets the calculator; and,
+  - while the decimal button will always display as "." in the display,
+    the multiple hotkeys support regional differences in how decimals
+    are represented and it is unlikely a user would press and hold both
  ********************/
-// TODO: new Map()
-const keyMap = {
-  Backspace: "#back-btn",
-  Delete: "#clear-btn",
-  Escape: "#all-clear-btn",
-  Enter: "#equals-btn",
-  "=": "#equals-btn",
-  ".": "#decimal-btn",
-  "+": "#add-btn",
-  "-": "#sub-btn",
-  "*": "#mul-btn",
-  "/": "#div-btn",
-  0: "#zero-btn",
-  1: "#one-btn",
-  2: "#two-btn",
-  3: "#three-btn",
-  4: "#four-btn",
-  5: "#five-btn",
-  6: "#six-btn",
-  7: "#seven-btn",
-  8: "#eight-btn",
-  9: "#nine-btn",
-  t: "#theme-btn",
-  T: "#theme-btn",
-  s: "#sign-btn",
-  S: "#sign-btn",
-};
-
-let downKeys = new Map();
+let keyMap = new Map([
+  ["backspace", { buttonId: "#back-btn", down: false }],
+  ["delete", { buttonId: "#clear-btn", down: false }],
+  ["escape", { buttonId: "#all-clear-btn", down: false }],
+  ["enter", { buttonId: "#equals-btn", down: false }],
+  ["=", { buttonId: "#equals-btn", down: false }],
+  [".", { buttonId: "#decimal-btn", down: false }],
+  [",", { buttonId: "#decimal-btn", down: false }],
+  ["+", { buttonId: "#add-btn", down: false }],
+  ["-", { buttonId: "#sub-btn", down: false }],
+  ["*", { buttonId: "#mul-btn", down: false }],
+  ["/", { buttonId: "#div-btn", down: false }],
+  ["0", { buttonId: "#zero-btn", down: false }],
+  ["1", { buttonId: "#one-btn", down: false }],
+  ["2", { buttonId: "#two-btn", down: false }],
+  ["3", { buttonId: "#three-btn", down: false }],
+  ["4", { buttonId: "#four-btn", down: false }],
+  ["5", { buttonId: "#five-btn", down: false }],
+  ["6", { buttonId: "#six-btn", down: false }],
+  ["7", { buttonId: "#seven-btn", down: false }],
+  ["8", { buttonId: "#eight-btn", down: false }],
+  ["9", { buttonId: "#nine-btn", down: false }],
+  ["t", { buttonId: "#theme-btn", down: false }],
+  ["s", { buttonId: "#sign-btn", down: false }],
+]);
 
 document.addEventListener("keydown", (event) => {
-  if (!errDialog.open && !downKeys.has(event.key)) {
-    if (keyMap[event.key] !== undefined) {
-      downKeys.set(event.key, true);
+  // Handles alpha keys regardless of case.
+  const key = event.key.toLowerCase();
 
-      event.preventDefault();
+  // Only accept calculator hotkeys while the error modal is not displayed.
+  if (!errDialog.open && keyMap.has(key)) {
+    event.preventDefault();
 
-      const downKey = event.key;
+    let keyState = keyMap.get(key);
 
-      const pressedElem = document.querySelector(keyMap[downKey]);
-      if (pressedElem) {
-        pressedElem.classList.add("active");
+    // If the key has already been marked down, return.
+    if (keyState.down) {
+      return;
+    } else {
+      keyState.down = true;
+    }
 
-        try {
-          Calc.processKeyboardInput(downKey);
+    // Make the button associated to the key active, to appear as pressed.
+    const buttonToPress = document.querySelector(keyState.buttonId);
+    if (buttonToPress) {
+      buttonToPress.classList.add("active");
 
-          if (["=", "Enter", "Escape"].includes(downKey)) {
-            clearOperatorButtonHighlight();
-          }
+      try {
+        Calc.processKeyboardInput(key);
 
-          if (["+", "-", "*", "/"].includes(downKey)) {
-            highlightOperatorButton(downKey);
-          }
-
-          if (downKey === "t" || downKey === "T") {
-            toggleTheme();
-            highlightOperatorButton(Calc.opStr);
-          }
-        } catch (err) {
-          handleCalculatorException(err);
-        } finally {
-          updateCalcDisplay();
+        if (["=", "Enter", "Escape"].includes(key)) {
+          clearOperatorButtonHighlight();
         }
+
+        if (["+", "-", "*", "/"].includes(key)) {
+          highlightOperatorButton(key);
+        }
+
+        if (key === "t" || key === "T") {
+          toggleTheme();
+          highlightOperatorButton(Calc.opStr);
+        }
+      } catch (err) {
+        handleCalculatorException(err);
+      } finally {
+        updateCalcDisplay();
       }
     }
 
@@ -84,13 +100,40 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keyup", (event) => {
-  downKeys.delete(event.key);
+  // Handles alpha keys regardless of case.
+  const key = event.key.toLowerCase();
 
-  const upElement = document.querySelector('button[class~="active"]');
-  if (upElement) {
-    upElement.classList.remove("active");
+  // The two specific cases here naively handles the case where a key requiring
+  // the `Shift` modifier is released after `Shift` has already been released.
+  // It functions properly on any keyboard layout where the keys share a
+  // physical key (QWERTY, DVORAK, COLEMAK), but not other common layouts
+  // such as AZERTY and QWERTZ.
+  // TODO: Handle this across keyboard layouts?
+  switch (event.code) {
+    case "Digit8":
+      releaseButtonByKey("*");
+      releaseButtonByKey("8");
+      break;
+    case "Equal":
+      releaseButtonByKey("+");
+      releaseButtonByKey("=");
+      break;
+    default:
+      releaseButtonByKey(key);
+      break;
   }
 });
+
+function releaseButtonByKey(key) {
+  if (keyMap.has(key)) {
+    let keyToRelease = keyMap.get(key);
+    if (keyToRelease.down) {
+      keyToRelease.down = false;
+      const buttonToRelease = document.querySelector(keyToRelease.buttonId);
+      buttonToRelease.classList.remove("active");
+    }
+  }
+}
 
 /**************
  * CALCULATOR *

@@ -36,23 +36,23 @@ export class Calculator {
       this.setOperator(key);
     }
 
-    if (["=", "Enter"].includes(key)) {
+    if (["=", "enter"].includes(key)) {
       this.equals();
     }
 
-    if (key === "Backspace") {
+    if (key === "backspace") {
       this.backspace();
     }
 
-    if (key === "Delete") {
+    if (key === "delete") {
       this.clearDisplay();
     }
 
-    if (key === "Escape") {
+    if (key === "escape") {
       this.allClear();
     }
 
-    if (key === "s" || key === "S") {
+    if (key === "s") {
       this.changeSign();
     }
   }
