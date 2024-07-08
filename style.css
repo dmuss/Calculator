@@ -103,9 +103,12 @@ button {
 }
 
 dialog {
-  background-color: var(--num-btn-bg);
+  background-color: var(--calc-bg);
   color: var(--num-btn-font-color);
+  min-width: 300px;
   margin: auto auto;
+  border-color: var(--num-btn-font-color);
+  border-radius: 10px;
 }
 
 dialog::backdrop {
@@ -198,13 +201,21 @@ button:active {
   padding-right: 9px;
 }
 
+#close-error-btn {
+  width: 140px;
+  margin-top: 10px;
+  box-shadow: none;
+}
+
 .op-btn,
+#close-error-btn,
 #equals-btn {
-  color: var(--op-btn-font-color);
   background-color: var(--op-btn-bg);
+  color: var(--op-btn-font-color);
 }
 
 .op-btn:hover,
+#close-error-btn:hover,
 #equals-btn:hover {
   background-color: var(--op-btn-hover);
 }
@@ -214,14 +225,12 @@ button:active {
 }
 
 .clear-btn,
-.close,
 #theme-btn {
   color: var(--clear-btn-font-color);
   background-color: var(--clear-btn-bg);
 }
 
 .clear-btn:hover,
-.close:hover,
 #theme-btn:hover {
   background-color: var(--clear-btn-hover);
 }
