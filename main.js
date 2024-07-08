@@ -76,7 +76,7 @@ document.addEventListener("keydown", (event) => {
       try {
         Calc.processKeyboardInput(key);
 
-        if (["=", "Enter", "Escape"].includes(key)) {
+        if (["=", "enter", "escape"].includes(key)) {
           clearOperatorButtonHighlight();
         }
 
@@ -84,7 +84,7 @@ document.addEventListener("keydown", (event) => {
           highlightOperatorButton(key);
         }
 
-        if (key === "t" || key === "T") {
+        if (key === "t") {
           toggleTheme();
           highlightOperatorButton(Calc.opStr);
         }
@@ -171,8 +171,8 @@ calc.addEventListener("click", (event) => {
 
 function handleCalculatorException(err) {
   if (err instanceof DisplayParseError) {
-    clearOperatorButtonHighlight();
     highlightOperatorButton(Calc.opStr);
+    showErrorModalWithText(err.message);
   }
 
   if (err instanceof DivByZeroError) {
@@ -183,14 +183,14 @@ function handleCalculatorException(err) {
 function onInputButton(target) {
   switch (target.id) {
     case "clear-btn":
-      Calc.pressed("Delete");
+      Calc.pressed("delete");
       break;
     case "all-clear-btn":
-      Calc.pressed("Escape");
+      Calc.pressed("escape");
       clearOperatorButtonHighlight();
       break;
     case "back-btn":
-      Calc.pressed("Backspace");
+      Calc.pressed("backspace");
       break;
     case "sign-btn":
       Calc.pressed("s");

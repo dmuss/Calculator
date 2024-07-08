@@ -188,7 +188,7 @@ export class Calculator {
 
     if (isNaN(parsedDisplay)) {
       throw new DisplayParseError(
-        "Entered an invalid number!",
+        "Entered an invalid number! Resetting calculator.",
         this.#displayStr,
       );
     } else {
