@@ -1,14 +1,16 @@
 import {
   setThemeFromLocalStorageOrDefault,
   toggleTheme,
-} from "./scripts/themes.js";
-import { Calculator as Calc } from "./scripts/calculator.js";
-import { DivByZeroError, DisplayParseError } from "./scripts/errors.js";
+} from "./modules/themes.js";
+import * as Calc from "./modules/calculator/calculator.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   setThemeFromLocalStorageOrDefault();
   updateCalcDisplay();
 });
+
+// TODO: Move theme toggle into page, not part of calculator despite button
+// being visually part of it.
 
 /********************
  * KEYBOARD SUPPORT *
@@ -74,7 +76,7 @@ document.addEventListener("keydown", (event) => {
       buttonToPress.classList.add("active");
 
       try {
-        Calc.processKeyboardInput(key);
+        Calc.keyPressed(key);
 
         if (["=", "enter", "escape"].includes(key)) {
           clearOperatorButtonHighlight();
@@ -86,7 +88,7 @@ document.addEventListener("keydown", (event) => {
 
         if (key === "t") {
           toggleTheme();
-          highlightOperatorButton(Calc.opStr);
+          highlightOperatorButton(Calc.getOperatorString());
         }
       } catch (err) {
         handleCalculatorException(err);
@@ -145,18 +147,18 @@ calc.addEventListener("click", (event) => {
     const targetClasses = target.className;
 
     if (target.id === "equals-btn") {
-      Calc.pressed("=");
+      Calc.keyPressed("=");
       clearOperatorButtonHighlight();
     }
 
     if (targetClasses.includes("op-btn")) {
-      Calc.pressed(target.textContent);
-      highlightOperatorButton(Calc.opStr);
+      Calc.keyPressed(target.textContent);
+      highlightOperatorButton(Calc.getOperatorString());
     }
 
     if (target.id === "theme-btn") {
       toggleTheme();
-      highlightOperatorButton(Calc.opStr);
+      highlightOperatorButton(Calc.getOperatorString());
     }
 
     if (targetClasses.includes("input-btn")) {
@@ -170,12 +172,12 @@ calc.addEventListener("click", (event) => {
 });
 
 function handleCalculatorException(err) {
-  if (err instanceof DisplayParseError) {
-    highlightOperatorButton(Calc.opStr);
+  if (err instanceof Calc.DisplayParseError) {
+    highlightOperatorButton(Calc.getOperatorString());
     showErrorModalWithText(err.message);
   }
 
-  if (err instanceof DivByZeroError) {
+  if (err instanceof Calc.DivByZeroError) {
     showErrorModalWithText(err.message);
   }
 }
@@ -183,20 +185,20 @@ function handleCalculatorException(err) {
 function onInputButton(target) {
   switch (target.id) {
     case "clear-btn":
-      Calc.pressed("delete");
+      Calc.keyPressed("delete");
       break;
     case "all-clear-btn":
-      Calc.pressed("escape");
+      Calc.keyPressed("escape");
       clearOperatorButtonHighlight();
       break;
     case "back-btn":
-      Calc.pressed("backspace");
+      Calc.keyPressed("backspace");
       break;
     case "sign-btn":
-      Calc.pressed("s");
+      Calc.keyPressed("s");
       break;
     default:
-      Calc.pressed(target.textContent);
+      Calc.keyPressed(target.textContent);
       break;
   }
 }
@@ -244,8 +246,8 @@ const calcDisplayTextElem = document.querySelector("#display-text");
 const calcMemoElem = document.querySelector("#display-memo");
 
 function updateCalcDisplay() {
-  calcDisplayTextElem.textContent = Calc.displayStr;
-  calcMemoElem.textContent = Calc.memoStr;
+  calcDisplayTextElem.textContent = Calc.getDisplayString();
+  calcMemoElem.textContent = Calc.getMemoString();
 }
 
 /***************

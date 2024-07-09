@@ -21,6 +21,7 @@ export function operate(num1, num2, op) {
   return result;
 }
 
+// TODO: Consistent function delarations throughout project.
 const add = (num1, num2) => {
   return num1 + num2;
 };
