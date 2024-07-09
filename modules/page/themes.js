@@ -4,7 +4,7 @@ export function setThemeFromLocalStorageOrDefault() {
   if (currentTheme) {
     setTheme(currentTheme);
   } else {
-    setTheme("light");
+    setTheme("dark");
   }
 }
 
