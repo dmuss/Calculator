@@ -1,16 +1,17 @@
-const errDialog = document.querySelector("dialog");
-const errDialogOkBtn = document.querySelector("#close-error-btn");
+const dialogElement = document.querySelector("dialog");
+const okButtonElement = document.querySelector("#close-error-btn");
 
-errDialogOkBtn.addEventListener("click", () => {
-  errDialog.close();
+okButtonElement.addEventListener("click", () => {
+  dialogElement.close();
 });
 
 export function isErrorModalOpen() {
-  return errDialog.open;
+  return dialogElement.open;
 }
 
 export function showErrorModalWithText(text) {
-  const errDialogText = document.querySelector("dialog>p");
-  errDialogText.innerText = text;
-  errDialog.showModal();
+  const dialogTextElement = document.querySelector("dialog>p");
+  dialogTextElement.innerText = text;
+
+  dialogElement.showModal();
 }
