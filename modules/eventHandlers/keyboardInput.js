@@ -74,10 +74,6 @@ export function handleKeyDown(event) {
         Page.highlightOperatorButton(key);
       }
     } catch (err) {
-      if (err instanceof Calc.DisplayParseError) {
-        Page.highlightOperatorButton(Calc.getOperatorString());
-      }
-
       Page.showErrorModalWithText(err.message);
     } finally {
       Page.updateCalcDisplay(Calc.getDisplayString(), Calc.getMemoString());
