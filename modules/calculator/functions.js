@@ -112,9 +112,13 @@ function equals() {
 
     secondOperand = Display.parse();
 
-    firstOperand = Maths.operate(firstOperand, secondOperand, operatorString);
+    const resultString = Maths.operate(
+      firstOperand,
+      secondOperand,
+      operatorString,
+    ).toString();
 
-    Display.reset(firstOperand.toString());
+    reset(resultString);
   } catch (err) {
     Display.clear();
 
