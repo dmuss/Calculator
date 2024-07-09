@@ -3,8 +3,8 @@ import { DisplayParseError } from "./errors.js";
 const MAX_DISPLAY_DIGITS = 12;
 const DEFAULT_DISPLAY = "0";
 
-export let displayString = DEFAULT_DISPLAY;
-export let memoString = "";
+let displayString = DEFAULT_DISPLAY;
+let memoString = "";
 
 export function getDefault() {
   return DEFAULT_DISPLAY;
@@ -40,15 +40,15 @@ export function reset(newDisplayString = DEFAULT_DISPLAY) {
 }
 
 export function changeSign() {
-  if (displayString.startsWith("-")) {
-    displayString = displayString.substring(1);
-  } else {
-    displayString = "-" + displayString;
+  if (displayString !== DEFAULT_DISPLAY) {
+    if (displayString.startsWith("-")) {
+      displayString = displayString.substring(1);
+    } else {
+      displayString = "-" + displayString;
+    }
   }
 }
 
-// Appends the provided character to `displayStr`, if possible.
-// If the character cannot be appended, function does nothing.
 export function push(char) {
   if (
     (char === "." && displayString.includes(".")) ||
@@ -71,19 +71,25 @@ export function push(char) {
   displayString += char;
 }
 
+/**
+ * @throws {DisplayParseError} - Thrown if the parsed display is not a number.
+ */
 export function parse() {
   const parsedDisplay = parseFloat(displayString);
 
   if (isNaN(parsedDisplay)) {
-    throw new DisplayParseError("Entered an invalid number!", displayString);
+    throw new DisplayParseError(
+      `Entered value "${displayString}" is not a valid number!`,
+    );
   }
 
   return parsedDisplay;
 }
 
-// NOTE: This likely fails to catch all potential edge cases, but should
-// work fine for the purposes of this assignment.
 export function fit(string) {
+  // NOTE: This likely fails to catch all potential edge cases, but should
+  // work fine for the purposes of this assignment.
+
   if (string.length <= MAX_DISPLAY_DIGITS) {
     return string;
   }
@@ -94,10 +100,10 @@ export function fit(string) {
   }
 
   // If the string does not contain a decimal, it represents an integer too
-  // long to fit the display. Convert it to E notation and fit that to the
-  // display.
+  // long to fit the display.
   if (!string.includes(".")) {
-    return convertToAndFitENotationStringToDisplay(string);
+    const eNotationString = parseFloat(string).toExponential().toString();
+    return fitENotationStringToDisplay(eNotationString);
   }
 
   // Otherwise, the string represents a value with a decimal point that is too
@@ -107,8 +113,11 @@ export function fit(string) {
   if (decimalIndex > MAX_DISPLAY_DIGITS) {
     // Integer portion won't fit display. Round the string to the nearest
     // integer, convert it to E notation and fit that to the display.
-    const roundedString = Math.round(parseFloat(string)).toString();
-    return convertToAndFitENotationStringToDisplay(roundedString);
+    const roundedInteger = Math.round(parseFloat(string));
+    const eNotationString = parseFloat(roundedInteger)
+      .toExponential()
+      .toString();
+    return fitENotationStringToDisplay(eNotationString);
   } else {
     // Decimal places run past end of display, round to number of decimal
     // places that will fit.
@@ -118,20 +127,21 @@ export function fit(string) {
 }
 
 function fitENotationStringToDisplay(string) {
+  if (string.length < MAX_DISPLAY_DIGITS) {
+    return string;
+  }
   const [significandString, exponentString] = string.split("e");
 
   const numDecimalPlacesToFit =
     MAX_DISPLAY_DIGITS -
     exponentString.length -
-    (significandString.indexOf(".") + 1);
+    // Ensure there is space for the decimal point and "e".
+    (significandString.indexOf(".") + 1) -
+    1;
 
   return (
     parseFloat(significandString).toFixed(numDecimalPlacesToFit) +
+    "e" +
     exponentString
   );
-}
-
-function convertToAndFitENotationStringToDisplay(string) {
-  const eNotationString = parseFloat(string).toExponential().toString();
-  return fitENotationStringToDisplay(eNotationString);
 }
