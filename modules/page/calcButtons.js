@@ -1,17 +1,15 @@
-const ACTIVE_CLASS_NAME = "active";
-
-export function removeHighlightFromOperatorButton() {
-  const currentlyHighlightedButton = document.querySelector(
-    '.op-btn[class~="highlight"]',
+export function removeHighlightFromOperatorButtons() {
+  const currentlyHighlightedButtonElement = document.querySelector(
+    '.operator-btn[class~="highlight"]',
   );
 
-  if (currentlyHighlightedButton) {
-    currentlyHighlightedButton.classList.remove("highlight");
+  if (currentlyHighlightedButtonElement) {
+    currentlyHighlightedButtonElement.classList.remove("highlight");
   }
 }
 
 export function highlightOperatorButton(buttonChar) {
-  removeHighlightFromOperatorButton();
+  removeHighlightFromOperatorButtons();
 
   let operatorButton = null;
   switch (buttonChar) {
@@ -36,14 +34,22 @@ export function highlightOperatorButton(buttonChar) {
   }
 }
 
+/**
+ * Shows the same button down effect as a mouse click when using keyboard
+ * input.
+ */
 export function pressButtonById(id) {
   const buttonElementToPress = document.querySelector(id);
   if (buttonElementToPress) {
-    buttonElementToPress.classList.add(ACTIVE_CLASS_NAME);
+    buttonElementToPress.classList.add("active");
   }
 }
 
+/**
+ * Returns a button to default display as though user released a click when
+ * using keyboard input.
+ */
 export function releaseButtonById(id) {
   const buttonElementToRelease = document.querySelector(id);
-  buttonElementToRelease.classList.remove(ACTIVE_CLASS_NAME);
+  buttonElementToRelease.classList.remove("active");
 }

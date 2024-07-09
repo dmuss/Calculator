@@ -122,18 +122,18 @@ button:active {
   padding-right: 9px;
 }
 
-.op-btn,
+.operator-btn,
 #equals-btn {
   background-color: var(--op-btn-bg);
   color: var(--op-btn-font-color);
 }
 
-.op-btn:hover,
+.operator-btn:hover,
 #equals-btn:hover {
   background-color: var(--op-btn-hover);
 }
 
-.op-btn.highlight {
+.operator-btn.highlight {
   background-color: var(--op-btn-active);
   color: var(--op-btn-active-font-color);
 }

@@ -67,7 +67,7 @@ export function handleKeyDown(event) {
       Calc.keyPressed(key);
 
       if (["=", "enter", "escape"].includes(key)) {
-        Page.removeHighlightFromOperatorButton();
+        Page.removeHighlightFromOperatorButtons();
       }
 
       if (["+", "-", "*", "/"].includes(key)) {

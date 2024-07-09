@@ -11,18 +11,19 @@ export function handleMouseInput(event) {
 
     if (target.id === "equals-btn") {
       Calc.keyPressed("=");
-      Page.removeHighlightFromOperatorButton();
+      Page.removeHighlightFromOperatorButtons();
     }
 
     const targetClasses = target.classList;
 
-    if (targetClasses.contains("op-btn")) {
+    if (targetClasses.contains("operator-btn")) {
       const pressedOperatorButton = target.textContent;
 
       Calc.keyPressed(pressedOperatorButton);
-      Page.highlightOperatorButtonOrClear(pressedOperatorButton);
+      Page.highlightOperatorButton(pressedOperatorButton);
     }
 
+    // Input buttons are buttons that affect the current displayed value.
     if (targetClasses.contains("input-btn")) {
       switch (target.id) {
         case "clear-btn":
@@ -30,7 +31,7 @@ export function handleMouseInput(event) {
           break;
         case "all-clear-btn":
           Calc.keyPressed("escape");
-          Page.removeHighlightFromOperatorButton();
+          Page.removeHighlightFromOperatorButtons();
           break;
         case "back-btn":
           Calc.keyPressed("backspace");
@@ -45,7 +46,7 @@ export function handleMouseInput(event) {
     }
   } catch (err) {
     if (err instanceof Calc.DisplayParseError) {
-      Page.highlightOperatorButtonOrClear(Calc.getOperatorString());
+      // Page.highlightOperatorButton(Calc.getOperatorString());
     }
 
     Page.showErrorModalWithText(err.message);
