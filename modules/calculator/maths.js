@@ -1,4 +1,4 @@
-import { DivByZeroError } from "./errors.js";
+import { DivideByZeroError } from "./errors.js";
 
 /* NOTE: Per assignment, create four functions for basic arithmetic
  * and an operate function that takes two operands and an operator
@@ -46,7 +46,7 @@ function multiply(num1, num2) {
  */
 function divide(num1, num2) {
   if (num2 === 0 || isNaN(num2)) {
-    throw new DivByZeroError("Cannot divide by zero!");
+    throw new DivideByZeroError("Cannot divide by zero!");
   }
 
   return num1 / num2;

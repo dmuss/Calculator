@@ -1,4 +1,4 @@
-export class DivByZeroError extends TypeError {
+export class DivideByZeroError extends TypeError {
   constructor(message) {
     super(message);
     this.name = "DivByZeroError";
@@ -6,9 +6,8 @@ export class DivByZeroError extends TypeError {
 }
 
 export class DisplayParseError extends RangeError {
-  constructor(message, invalidValue) {
+  constructor(message) {
     super(message);
     this.name = "DisplayParseError";
-    this.invalidValue = invalidValue;
   }
 }
