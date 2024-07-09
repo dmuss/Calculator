@@ -1,8 +1,10 @@
 import * as Maths from "./maths.js";
 import * as Display from "./display.js";
 
-// These variables store the parsed numbers and operator
-// required for math functions, per assignment direction.
+/* NOTE:  Per assignment, create these three variables to be passed
+ * to `Maths.operate` and update display. Have decided to manage display
+ * as a string that's parsed by this module's functions.
+ */
 let firstOperand = null;
 let secondOperand = null;
 let operatorString = null;
@@ -58,6 +60,12 @@ function allClear() {
   Display.reset();
 }
 
+/**
+ * Resets all operating variables and the display.
+ *
+ * @param {String} newDisplayString - The string to display on the calculator.
+ * If a new string is not provided, resets to default display.
+ */
 function reset(newDisplayString = Display.getDefault()) {
   firstOperand = null;
   secondOperand = null;
@@ -65,10 +73,21 @@ function reset(newDisplayString = Display.getDefault()) {
   Display.reset(newDisplayString);
 }
 
-function setOperator(operator) {
+/**
+ * @throws {DisplayParseError} - Thrown if the parsed value of the current
+ * display is not a number.
+ */
+function setOperator(operatorChar) {
   try {
     const parsedDisplay = Display.parse();
 
+    /* NOTE: Assignment states the calculator "should not evaluate more than a
+     * single pair of numbers at a time. However, this felt awkward and
+     * disruptive if a new operator was pressed with a first operand and a
+     * value of `0` in the display. Instead, the calculator will only
+     * automatically evaluate the current display in that case if it is not
+     * showing `0`, and just updates the selected operator.
+     */
     if (firstOperand === null) {
       firstOperand = parsedDisplay;
     } else if (Display.getDisplay() != Display.getDefault()) {
@@ -86,14 +105,12 @@ function setOperator(operator) {
       secondOperand = null;
     }
 
-    operatorString = operator;
-    Display.setMemo(`${firstOperand} ${operatorString}`);
+    updateOperator(operatorChar);
 
     Display.clear();
   } catch (err) {
     if (firstOperand !== null) {
-      operatorString = operator;
-      Display.setMemo(`${firstOperand} ${operatorString}`);
+      updateOperator(operatorChar);
     }
 
     secondOperand = null;
@@ -104,6 +121,14 @@ function setOperator(operator) {
   }
 }
 
+function updateOperator(operatorChar) {
+  operatorString = operatorChar;
+  Display.setMemo(`${firstOperand} ${operatorString}`);
+}
+
+/**
+ * @throws {DivideByZeroError}
+ */
 function equals() {
   try {
     if (firstOperand === null) {
