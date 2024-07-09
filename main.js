@@ -1,12 +1,7 @@
-import {
-  setThemeFromLocalStorageOrDefault,
-  toggleTheme,
-} from "./modules/themes.js";
 import * as Calc from "./modules/calculator/calculator.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  setThemeFromLocalStorageOrDefault();
-  updateCalcDisplay();
+  Page.setThemeFromLocalStorageOrDefault();
 });
 
 // TODO: Move theme toggle into page, not part of calculator despite button
@@ -87,7 +82,7 @@ document.addEventListener("keydown", (event) => {
         }
 
         if (key === "t") {
-          toggleTheme();
+          Page.toggleTheme();
           highlightOperatorButton(Calc.getOperatorString());
         }
       } catch (err) {

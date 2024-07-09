@@ -1,11 +1,5 @@
 let currentTheme = localStorage.getItem("theme");
 
-function setTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem("theme", theme);
-  currentTheme = theme;
-}
-
 export function setThemeFromLocalStorageOrDefault() {
   if (currentTheme) {
     setTheme(currentTheme);
@@ -20,4 +14,10 @@ export function toggleTheme() {
   } else {
     setTheme("dark");
   }
+}
+
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+  currentTheme = theme;
 }
