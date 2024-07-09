@@ -57,7 +57,7 @@ export function keyPressed(key) {
 
 function allClear() {
   reset();
-  Display.allClear();
+  Display.reset();
 }
 
 function reset(newDisplayString = Display.getDefault()) {
