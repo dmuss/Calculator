@@ -1,8 +1,7 @@
-const calcDisplayTextElem = document.querySelector("#display-text");
-const calcMemoElem = document.querySelector("#display-memo");
+const calculatorDisplayTextElement = document.querySelector("#display-text");
+const calculatorMemoTextElement = document.querySelector("#display-memo");
 
 export function updateCalcDisplay(displayString, memoString) {
-  calcDisplayTextElem.textContent = displayString;
-  calcMemoElem.textContent = memoString;
+  calculatorDisplayTextElement.textContent = displayString;
+  calculatorMemoTextElement.textContent = memoString;
 }
-
