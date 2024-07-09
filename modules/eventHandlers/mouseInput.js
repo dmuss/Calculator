@@ -11,7 +11,7 @@ export function handleMouseInput(event) {
 
     if (target.id === "equals-btn") {
       Calc.keyPressed("=");
-      Page.highlightOperatorButtonOrClear();
+      Page.removeHighlightFromOperatorButton();
     }
 
     const targetClasses = target.classList;
@@ -30,7 +30,7 @@ export function handleMouseInput(event) {
           break;
         case "all-clear-btn":
           Calc.keyPressed("escape");
-          Page.highlightOperatorButtonOrClear();
+          Page.removeHighlightFromOperatorButton();
           break;
         case "back-btn":
           Calc.keyPressed("backspace");

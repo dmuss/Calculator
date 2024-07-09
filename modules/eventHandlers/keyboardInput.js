@@ -67,15 +67,15 @@ export function handleKeyDown(event) {
       Calc.keyPressed(key);
 
       if (["=", "enter", "escape"].includes(key)) {
-        Page.highlightOperatorButtonOrClear();
+        Page.removeHighlightFromOperatorButton();
       }
 
       if (["+", "-", "*", "/"].includes(key)) {
-        Page.highlightOperatorButtonOrClear(key);
+        Page.highlightOperatorButton(key);
       }
     } catch (err) {
       if (err instanceof Calc.DisplayParseError) {
-        Page.highlightOperatorButtonOrClear(Calc.getOperatorString());
+        Page.highlightOperatorButton(Calc.getOperatorString());
       }
 
       Page.showErrorModalWithText(err.message);
