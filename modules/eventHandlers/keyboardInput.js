@@ -1,15 +1,14 @@
-/*  NOTE: The current keyboard input handling will not properly display
- *  "pressed" and "unpressed" buttons on the page where there are multiple
- *  hotkeys for that button (e.g., if you press and hold `.`, then press and
- *  release `,` while still holding `.`, the page will render the decimal
- *  button "unpressed" as it handled a `keyup` event for one of the hotkeys.
- *  ----------------------------------------------------------------------------
- *  In practice, this really shouldn't be much of an issue as only the equals
- *  and decimal buttons share a hotkey, and:
- *   - the equals button is unlikely to be held and resets the calculator; and,
- *   - while the decimal button will always display as "." in the display,
- *     the multiple hotkeys support regional differences in how decimals
- *     are represented and it is unlikely a user would press and hold both
+/* TODO:: Current keyboard handling doesn't properly reject and keydown
+ * events for shared hotkeys:
+ * - Decimal keys: While display rejects multiple decimal points, if an
+ * equation is completed, can use the other to enter a decimal point on
+ * the new value.
+ * - Equals keys: If user holds the equals key, calculator will calculate
+ * result. User is able to use another equals hotkey to make another
+ * calculation.
+ *
+ * In practice, these scenarios are unlikely and not overly disruptive in
+ * normal use.
  */
 
 import * as Calc from "../calculator/calculator.js";
@@ -46,33 +45,22 @@ export function handleKeyDown(event) {
   const key = event.key.toLowerCase();
 
   if (!Page.isErrorModalOpen() && keyMap.has(key)) {
-    event.preventDefault();
-
-    let keyMapValue = keyMap.get(key);
-
-    // Prevent processing held keydown events.
-    if (keyMapValue.down) {
-      return;
-    } else {
-      keyMapValue.down = true;
-    }
-
-    Page.pressButtonById(keyMapValue.buttonId);
-
     try {
-      if (key === "t") {
-        Page.toggleTheme();
+      // Default hotkeys share keys with some browser behaviour. Disable the
+      // browser behaviour.
+      event.preventDefault();
+
+      let keyMapValue = keyMap.get(key);
+
+      // Prevent processing held keydown events and set key as down.
+      if (keyMapValue.down) {
+        return;
       }
+      keyMapValue.down = true;
 
       Calc.keyPressed(key);
 
-      if (["=", "enter", "escape"].includes(key)) {
-        Page.removeHighlightFromOperatorButtons();
-      }
-
-      if (["+", "-", "*", "/"].includes(key)) {
-        Page.highlightOperatorButton(key);
-      }
+      updatePageKeyDown(key);
     } catch (err) {
       Page.showErrorModalWithText(err.message);
     } finally {
@@ -88,7 +76,16 @@ export function handleKeyUp(event) {
   if (keyMap.has(key)) {
     keyMap.get(key).down = false;
 
-    // The two specific cases here naively handles the case where a key requiring
+    // Do not release a button on the page if a shared hotkey is released by
+    // the user while holding another.
+    if (
+      (isKeyDecimalKey(key) && isADecimalKeyDown(key)) ||
+      (isKeyEqualsKey(key) && isAnEqualsKeyDown(key))
+    ) {
+      return;
+    }
+
+    // The two specific cases here naively handle when a key requiring
     // the `Shift` modifier is released after `Shift` has already been released.
     // It functions properly on any keyboard layout where the keys share a
     // physical key (QWERTY, DVORAK, COLEMAK), but not other common layouts
@@ -108,4 +105,36 @@ export function handleKeyUp(event) {
         break;
     }
   }
+}
+
+function updatePageKeyDown(key) {
+  Page.pressButtonById(keyMap.get(key).buttonId);
+
+  if (key === "t") {
+    Page.toggleTheme();
+  }
+
+  if (["=", "enter", "escape"].includes(key)) {
+    Page.removeHighlightFromOperatorButtons();
+  }
+
+  if (["+", "-", "*", "/"].includes(key)) {
+    Page.highlightOperatorButton(key);
+  }
+}
+
+function isKeyDecimalKey(key) {
+  return key === "." || key === ",";
+}
+
+function isADecimalKeyDown() {
+  return keyMap.get(".").down || keyMap.get(",").down;
+}
+
+function isKeyEqualsKey(key) {
+  return key === "=" || key === "enter";
+}
+
+function isAnEqualsKeyDown() {
+  return keyMap.get("=").down || keyMap.get("enter").down;
 }
