@@ -9,3 +9,7 @@ export function showErrorModalWithText(text) {
   errDialogText.innerText = text;
   errDialog.showModal();
 }
+
+export function modalIsOpen() {
+  return errDialog.open;
+}
