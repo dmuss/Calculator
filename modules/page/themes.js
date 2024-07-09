@@ -1,6 +1,6 @@
 let currentTheme = localStorage.getItem("theme");
 
-export function setThemeFromLocalStorageOrDefault() {
+export function setThemeFromLocalStorageOrDark() {
   if (currentTheme) {
     setTheme(currentTheme);
   } else {
