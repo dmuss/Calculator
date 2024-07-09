@@ -136,36 +136,6 @@ function releaseButtonByKey(key) {
  * CALCULATOR *
  **************/
 const calc = document.querySelector("#calculator");
-calc.addEventListener("click", (event) => {
-  try {
-    const target = event.target;
-    const targetClasses = target.className;
-
-    if (target.id === "equals-btn") {
-      Calc.keyPressed("=");
-      clearOperatorButtonHighlight();
-    }
-
-    if (targetClasses.includes("op-btn")) {
-      Calc.keyPressed(target.textContent);
-      highlightOperatorButton(Calc.getOperatorString());
-    }
-
-    if (target.id === "theme-btn") {
-      toggleTheme();
-      highlightOperatorButton(Calc.getOperatorString());
-    }
-
-    if (targetClasses.includes("input-btn")) {
-      onInputButton(target);
-    }
-  } catch (err) {
-    handleCalculatorException(err);
-  } finally {
-    updateCalcDisplay();
-  }
-});
-
 function handleCalculatorException(err) {
   if (err instanceof Calc.DisplayParseError) {
     highlightOperatorButton(Calc.getOperatorString());
@@ -176,28 +146,6 @@ function handleCalculatorException(err) {
     showErrorModalWithText(err.message);
   }
 }
-
-function onInputButton(target) {
-  switch (target.id) {
-    case "clear-btn":
-      Calc.keyPressed("delete");
-      break;
-    case "all-clear-btn":
-      Calc.keyPressed("escape");
-      clearOperatorButtonHighlight();
-      break;
-    case "back-btn":
-      Calc.keyPressed("backspace");
-      break;
-    case "sign-btn":
-      Calc.keyPressed("s");
-      break;
-    default:
-      Calc.keyPressed(target.textContent);
-      break;
-  }
-}
-
 function clearOperatorButtonHighlight() {
   let currentlyHighlightedButton = document.querySelector(
     '.op-btn[class~="highlight"]',
@@ -259,3 +207,4 @@ function showErrorModalWithText(text) {
   errDialogText.innerText = text;
   errDialog.showModal();
 }
+calc.addEventListener("click", Page.handleMouseInput);

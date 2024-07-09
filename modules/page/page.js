@@ -1,5 +1,7 @@
 import * as ErrorModal from "./errorModal.js";
 import * as Calc from "../calculator/calculator.js";
+
+export * from "./mouseInput.js";
 export function handleCalculatorException(err) {
   if (err instanceof Calc.DisplayParseError) {
     highlightOperatorButtonOrClear(Calc.getOperatorString());
