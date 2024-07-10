@@ -6,8 +6,7 @@ Try it here: https://dmuss.github.io/Calculator
 
 ## Note
 
-- This assignment is meant to demonstrate some knowledge of JavaScript, HTML, and CSS. It is not fully mathematically accurate. When values will not fit the visual display of the calculator, they will be roughly rounded and trimmed to fit.
-- The calculator is not responsive and is unlikely to render well on mobile devices.
+- This project is meant to demonstrate some knowledge of JavaScript, HTML, and CSS. The calculator is not fully mathematically accurate. When values will not fit the visual display of the calculator, they will be roughly rounded and trimmed to fit.
 
 ## How to Use
 
