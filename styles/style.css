@@ -15,6 +15,13 @@
   font-size: 16px;
 }
 
+body {
+  background-color: var(--body-bg);
+  font:
+    900 2rem / 1.5 "Noto Sans Mono",
+    monospace;
+}
+
 main {
   display: flex;
   flex-direction: column;

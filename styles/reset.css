@@ -13,8 +13,6 @@
 }
 
 body {
-  background-color: var(--body-bg);
-  font: 900 2rem / 1.5 monospace;
   text-align: center;
   -webkit-font-smoothing: antialiased;
 }
