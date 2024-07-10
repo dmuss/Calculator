@@ -36,7 +36,7 @@ button {
 #calculator {
   display: grid;
   grid-template-columns: repeat(4, 75px);
-  grid-template-rows: 35px 75px 375px;
+  grid-template-rows: 35px 75px 1fr;
   gap: 8px;
   width: 365px;
   height: 575px;
@@ -51,22 +51,32 @@ button {
 /************************************
 * CALCULATOR: NAME AND THEME BUTTON *
 *************************************/
+#calculator-top {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
 #calc-name,
 #theme-btn {
   font-size: 1.33rem;
 }
 
 #calc-name {
-  grid-column: 1 / 4;
   color: var(--num-btn-font-color);
   text-align: left;
 }
 
 /* Theme button colour styling in general buttons region. */
 #theme-btn {
-  grid-column: 4;
   border-radius: 25px;
-  font-size: 2rem;
+  margin-right: 10px;
+  width: 55px;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding-bottom: 5px;
 }
 
 /**********************
