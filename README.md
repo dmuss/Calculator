@@ -2,7 +2,7 @@
 
 A solution to the [Odin Project's](https://www.theodinproject.com) calculator [assignment](https://www.theodinproject.com/lessons/foundations-calculator).
 
-Try it here: https://dmuss.github.io/Calculator
+Try it here: https://dmuss.github.io/calculator
 
 ## Note
 
